@@ -1,19 +1,57 @@
-export type imageObject = {
-  src: string;
-  alt: string;
+export type Item = {
+  itemId: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  originalPrice: number;
+  status: string;
+  salePrice: number;
+  percent_off: number;
 };
 
-export const imagesData: imageObject[] = [
+export const products: Item[] = [
   {
-    src: '/images/HarvestMoon.jpg',
-    alt: 'HarvestMoon',
+    itemId: 1,
+    name: 'Havest Moon Guide',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imageUrl: '/images/HarvestMoon.jpg',
+    originalPrice: 20,
+    status: 'avaliable',
+    salePrice: 10,
+    percent_off: 50,
   },
   {
-    src: '/images/legoParrot.jpg',
-    alt: 'ParrotLegoSet',
+    itemId: 2,
+    name: 'Lego Parrot Creator 3 in 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imageUrl: '/images/legoParrot.jpg',
+    originalPrice: 20,
+    status: 'avaliable',
+    salePrice: 10,
+    percent_off: 50,
   },
   {
-    src: '/images/ReactTypeScriptBook.jpg',
-    alt: 'React TypeScript Book',
+    itemId: 3,
+    name: 'TypeScript Textbook',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imageUrl: '/images/ReactTypeScriptBook.jpg',
+    originalPrice: 20,
+    status: 'avaliable',
+    salePrice: 10,
+    percent_off: 50,
+  },
+  {
+    itemId: 4,
+    name: 'Havest Moon Guide',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imageUrl: '/images/HarvestMoon.jpg',
+    originalPrice: 20,
+    status: 'avaliable',
+    salePrice: 10,
+    percent_off: 50,
   },
 ];

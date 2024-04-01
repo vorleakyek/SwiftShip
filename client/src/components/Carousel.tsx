@@ -4,12 +4,12 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import CircleList from './CircleList';
 
 interface CarouselProps {
-  data: { src: string; alt: string }[];
+  data: { imageUrl: string; name: string }[];
 }
 
 const Carousel: React.FC<CarouselProps> = ({ data }: CarouselProps) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
-  const { src, alt } = data[currentImgIndex];
+  const { imageUrl: src, name: alt } = data[currentImgIndex];
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -34,27 +34,27 @@ const Carousel: React.FC<CarouselProps> = ({ data }: CarouselProps) => {
   }
 
   return (
-    <div className="container">
-      <div className="flex">
-        <div className="sideNav flex backward">
+    <div className="container max-w-5xl flex-css">
+      <div className="flex-css w-1/2">
+        <div className="sideNav flex-css backward">
           <button onClick={handlePrevious}>
-            <FaChevronLeft />
+            <FaChevronLeft className="text-2xl m-2" />
           </button>
         </div>
         <div className="mainContent">
-          <div className="content flex">
+          <div className="content flex-css">
             <img src={src} alt={alt} />
           </div>
-          <div className="flex dots">
+          <div className="flex-css dots m-2">
             <CircleList
               onCircleClick={handleCircleClick}
               currentImgIndex={currentImgIndex}
             />
           </div>
         </div>
-        <div className="sideNav flex forward">
+        <div className="sideNav flex-css forward">
           <button onClick={handleNext}>
-            <FaChevronRight />
+            <FaChevronRight className="text-2xl m-2" />
           </button>
         </div>
       </div>

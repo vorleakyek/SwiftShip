@@ -9,3 +9,57 @@
 .seach-icon {
   color: #0ea5e9;
 }
+
+.container {
+  padding: 20px 10px;
+  background-color: rgba(255, 167, 38, 0.07);
+}
+
+.flex-css {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sideNav {
+  flex-basis: 10%;
+  padding: 20px 0;
+}
+
+.mainContent {
+  flex-basis: 80%;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid black;
+}
+
+.filled-circle {
+  background-color: black;
+}
+
+ol {
+  list-style: none;
+}
+
+li,
+span {
+  display: block;
+  margin: 3px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+hr {
+  border: 0.5px solid 808080;
+}
+
+.sale-tag {
+  background-color: #cc0a0a;
+}

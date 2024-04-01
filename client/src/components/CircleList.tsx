@@ -9,7 +9,7 @@ const CircleList: React.FC<CircleClickProps> = ({
   onCircleClick,
   currentImgIndex,
 }: CircleClickProps) => {
-  const array = [0, 1, 2, 3, 4, 5];
+  const array = [0, 1, 2];
   const circles = array.map((index) => (
     <li key={index}>
       <span
@@ -21,7 +21,7 @@ const CircleList: React.FC<CircleClickProps> = ({
         }}></span>
     </li>
   ));
-  return <ol className="dotsUl flex">{circles}</ol>;
+  return <ol className="dotsUl flex-css">{circles}</ol>;
 };
 
 export default CircleList;
