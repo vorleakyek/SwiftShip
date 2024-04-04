@@ -33,6 +33,25 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
 });
 
+app.get('/api/products', async (req, res, next) => {
+  try {
+    const sql = `
+      select *
+      from "products"
+    `;
+
+    const result = await db.query(sql);
+
+    if (result.rows.length > 0) {
+      res.status(201).json(result.rows);
+    } else {
+      res.status(404).json({ message: 'No products found!' });
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.
