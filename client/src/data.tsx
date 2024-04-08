@@ -22,6 +22,18 @@ export async function getProducts(): Promise<Item[]> {
   return await res.json();
 }
 
+export async function getItem(itemID: number): Promise<Item> {
+  const req = {
+    method: 'GET',
+    headers: {
+      'content-Type': 'application/json',
+    },
+  };
+  const res = await fetch(`/api/products/${itemID}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
 // export const products: Item[] = [
 //   {
 //     itemId: 1,
