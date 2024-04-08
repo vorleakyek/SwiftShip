@@ -1,4 +1,5 @@
 // import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
 import './index.css';
@@ -6,7 +7,8 @@ import './App.css';
 
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
-import Homepage from './pages/HomePage';
+import HomePage from './pages/HomePage';
+import ItemPage from './pages/ItemPage';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
@@ -24,10 +26,16 @@ export default function App() {
   //   readServerData();
   // }, []);
 
+  // const navigate = useNavigate();
+
   return (
     <>
-      <NavBar />
-      <Homepage />
+      <Routes>
+        <Route path="/" element={<NavBar />}>
+          <Route index element={<HomePage />} />
+          <Route path="products/:itemID" element={<ItemPage />} />
+        </Route>
+      </Routes>
       <Footer />
     </>
   );
