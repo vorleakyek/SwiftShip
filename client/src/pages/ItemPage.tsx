@@ -22,17 +22,28 @@ export const ItemPage = () => {
   const { name, imageUrl, description } = item;
 
   return (
-    <div>
-      <h1>{name}</h1>
+    <div className="max-w-5xl my-5">
+      <p className="text-left">back</p>
+      <h1 className="font-medium py-5">{name}</h1>
       <div>
-        <img src={imageUrl} alt={name} />
+        <img className="mx-auto" src={imageUrl} alt={name} />
+        <div>
+          <div>
+            <span>-20%</span> Now $15.99 was $19.99{' '}
+          </div>
+        </div>
       </div>
-      <div>
-        <h2>Description:</h2>
-        <p>{description} </p>
+      <div className="pt-5">
+        <p className="text-left">
+          <span className="font-medium text-left">Description:</span>
+          {description}
+        </p>
       </div>
-      <div>
-        <select name="quantityOfItem" defaultValue="oneItem">
+      <div className="pt-5">
+        <select
+          className="bg-zinc-100 p-2"
+          name="quantityOfItem"
+          defaultValue="oneItem">
           <option value="oneItem">Quantity: 1</option>
           <option value="twoItem">Quantity: 2</option>
           <option value="threeItem">Quantity: 3</option>
@@ -45,6 +56,9 @@ export const ItemPage = () => {
           <option value="tenItem">Quantity: 10</option>
         </select>
       </div>
+      <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
+        Add to Cart
+      </button>
     </div>
   );
 };
