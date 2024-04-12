@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
+import ItemAdded from './ItemAdded';
 
 export const ItemPage = () => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
-  const navigate = useNavigate();
+  const [showAddedItem, setShowAddedItem] = useState(false);
+
+  // const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -26,7 +29,7 @@ export const ItemPage = () => {
     item;
 
   return (
-    <div className="max-w-5xl my-5">
+    <div className="max-w-5xl my-5 relative ">
       <Link to={`/`}>
         <p className="text-left">
           <IoIosArrowBack className="inline text-slate-300" />
@@ -76,9 +79,23 @@ export const ItemPage = () => {
       </div>
       <button
         className="bg-amber-400 rounded-3xl px-5 py-1 my-3"
-        onClick={() => navigate('/item')}>
+        onClick={() => setShowAddedItem(true)}>
         Add to Cart
       </button>
+
+      {showAddedItem && (
+        <>
+          <div className="absolute inset-0 bg-zinc-100 opacity-90"></div>
+          <div className="absolute top-0">
+            <ItemAdded
+              item={item}
+              handleCloseButton={() => {
+                setShowAddedItem(false);
+              }}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
