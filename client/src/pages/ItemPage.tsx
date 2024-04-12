@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
@@ -7,6 +7,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 export const ItemPage = () => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -73,7 +74,9 @@ export const ItemPage = () => {
           <option value="tenItem">Quantity: 10</option>
         </select>
       </div>
-      <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
+      <button
+        className="bg-amber-400 rounded-3xl px-5 py-1 my-3"
+        onClick={() => navigate('/item')}>
         Add to Cart
       </button>
     </div>
