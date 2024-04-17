@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
+import { Link } from 'react-router-dom';
+import { IoIosArrowBack } from 'react-icons/io';
 
 export const ItemPage = () => {
   const { itemID } = useParams();
@@ -19,23 +21,38 @@ export const ItemPage = () => {
   }, [itemID]);
 
   if (!item) return null;
-  const { name, imageUrl, description } = item;
+  const { name, imageUrl, description, percentOff, originalPrice, salePrice } =
+    item;
 
   return (
     <div className="max-w-5xl my-5">
-      <p className="text-left">back</p>
+      <Link to={`/`}>
+        <p className="text-left">
+          <IoIosArrowBack className="inline text-slate-300" />
+          back
+        </p>
+      </Link>
       <h1 className="font-medium py-5">{name}</h1>
-      <div>
-        <img className="mx-auto" src={imageUrl} alt={name} />
-        <div>
+      <div className="max-w-72 mx-auto">
+        <img src={imageUrl} alt={name} />
+        <div className="flex items-center justify-center">
           <div>
-            <span>-20%</span> Now $15.99 was $19.99{' '}
+            <p className="text-red-600 font-semibold pr-5">-{percentOff}%</p>
+          </div>
+          <div>
+            <p className="text-slate-700">Now ${salePrice}</p>
+            <p className="text-xs text-slate-600">
+              Was
+              <span className="line-through text-xs inline">
+                ${originalPrice}
+              </span>
+            </p>
           </div>
         </div>
       </div>
       <div className="pt-5">
         <p className="text-left">
-          <span className="font-medium text-left">Description:</span>
+          <span className="font-medium text-left ml-0">Description:</span>
           {description}
         </p>
       </div>
