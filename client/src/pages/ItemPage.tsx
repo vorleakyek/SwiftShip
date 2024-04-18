@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import ItemAdded from '../components/ItemAddedModal';
 
+export type ItemInCart = Item & {
+  itemQuantity: number;
+};
+
 export const ItemPage = () => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
@@ -32,21 +36,36 @@ export const ItemPage = () => {
   function handleAddToCartClick(item: Item, quantity: number) {
     setShowAddedItem(true);
     //check if "itemQuanity exist in the localstorage"
-
-    const itemsInCartString = localStorage.getItem('itemsInCart');
-    const itemsInCart: string | null = itemsInCartString
-      ? JSON.parse(itemsInCartString)
+    const itemsAddedInCartString = localStorage.getItem('itemsInCart');
+    const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
+      ? JSON.parse(itemsAddedInCartString)
       : null;
 
-    if (!itemsInCart) {
-      item['itemQuantity'] = quantity;
-      const addedItems = [item];
+    if (!itemsAddedInCart) {
+      const addedItems: ItemInCart[] = [];
+      const addedItem: ItemInCart = { ...item, itemQuantity: quantity };
+      addedItems.push(addedItem);
       localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
     } else {
-      //ensure same item should be updated the quanity instead of adding a new obj in the array
-      item['itemQuantity'] = quantity;
-      const addedItems = [...itemsInCart, item];
-      localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
+      //updating the quantity of an existing added item
+      // itemsAddedInCart.map((itemAdded)=> itemAdded.itemID === item.itemID ? itemAdded['itemQuantity'] = quantity : itemAdded);
+
+      let isFound = false;
+
+      itemsAddedInCart.map((itemAdded) => {
+        if (itemAdded.itemID === item.itemID) {
+          itemAdded['itemQuantity'] = quantity;
+          isFound = true;
+          localStorage.setItem('itemsInCart', JSON.stringify(itemsAddedInCart));
+          return;
+        }
+      });
+
+      if (!isFound) {
+        const addedItem: ItemInCart = { ...item, itemQuantity: quantity };
+        const addedItems: ItemInCart[] = [...itemsAddedInCart, addedItem];
+        localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
+      }
     }
   }
 

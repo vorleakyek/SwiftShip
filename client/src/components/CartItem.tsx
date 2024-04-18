@@ -1,9 +1,14 @@
 import { BsTrash } from 'react-icons/bs';
 import { HiMiniMinusSmall, HiPlusSmall } from 'react-icons/hi2';
 import { useState } from 'react';
+import { type ItemInCart } from '../pages/ItemPage';
 
-export default function CartItem() {
-  const [quantity, setQuantity] = useState(1);
+interface CartItemProps {
+  item: ItemInCart;
+}
+
+export default function CartItem({ item }: CartItemProps) {
+  const [quantity, setQuantity] = useState(item.itemQuantity);
 
   function handleMinus() {
     setQuantity(quantity - 1);
@@ -20,20 +25,19 @@ export default function CartItem() {
     <>
       <div className="flex justify-center my-5 ">
         <div className="basis-1/4 flex">
-          <img
-            src="../../images/legoParrot.jpg"
-            alt="parrot"
-            className="w-10/12"
-          />
+          <img src={item.imageUrl} alt={item.name} className="w-10/12" />
         </div>
         <div className="basis-2/4">
           <div className="text-left ml-5">
-            <h2 className="font-medium mb-2 ">Lego Parrot</h2>
+            <h2 className="font-medium mb-2 ">{item.name}</h2>
             <p className="text-xs">
               <span className="inline text-base text-rose-500 font-medium">
-                $15.99
+                `${item.salePrice}`
               </span>{' '}
-              was <span className="inline line-through">$19.99</span>
+              was{' '}
+              <span className="inline line-through">
+                `${item.originalPrice}`
+              </span>
             </p>
           </div>
         </div>
