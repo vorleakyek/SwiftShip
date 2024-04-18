@@ -19,7 +19,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="max-w-5xl">
+    <div className="max-w-5xl my-auto">
       {products && <Carousel data={products} />}
       <hr className="max-w-5xl" />
       <div>

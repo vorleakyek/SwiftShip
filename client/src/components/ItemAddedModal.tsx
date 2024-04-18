@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-export default function ItemAdded({ item, handleCloseButton }) {
+export default function ItemAdded({ item, quantity, handleCloseButton }) {
   const navigate = useNavigate();
   return (
     <>
@@ -21,7 +21,7 @@ export default function ItemAdded({ item, handleCloseButton }) {
           </div>
           <div className="basis-1/2 pt-5 px-3">
             <p className=" text-xl font-semibold mb-5">{item.name}</p>
-            <p className="text-base text-slate-500">Quantity: 2</p>
+            <p className="text-base text-slate-500">Quantity: {quantity}</p>
           </div>
         </div>
         <div className="flex justify-center">

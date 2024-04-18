@@ -9,7 +9,7 @@ import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
-import ItemAdded from './pages/ItemAdded';
+import ItemAdded from './components/ItemAddedModal';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
