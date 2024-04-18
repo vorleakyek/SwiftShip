@@ -3,10 +3,15 @@ import { useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
+import ItemAdded from '../components/ItemAddedModal';
 
 export const ItemPage = () => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
+  const [showAddedItem, setShowAddedItem] = useState(false);
+  const [selectedQuantity, setSelectedQuantity] = useState('1');
+
+  // const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -24,8 +29,13 @@ export const ItemPage = () => {
   const { name, imageUrl, description, percentOff, originalPrice, salePrice } =
     item;
 
+  function handleAddToCartClick() {
+    setShowAddedItem(true);
+    // window.scrollTo({top:0,behavior:'smooth'})
+  }
+
   return (
-    <div className="max-w-5xl my-5">
+    <div className="max-w-5xl my-5 relative ">
       <Link to={`/`}>
         <p className="text-left">
           <IoIosArrowBack className="inline text-slate-300" />
@@ -60,22 +70,40 @@ export const ItemPage = () => {
         <select
           className="bg-zinc-100 p-2"
           name="quantityOfItem"
-          defaultValue="oneItem">
-          <option value="oneItem">Quantity: 1</option>
-          <option value="twoItem">Quantity: 2</option>
-          <option value="threeItem">Quantity: 3</option>
-          <option value="fourItem">Quantity: 4</option>
-          <option value="fiveItem">Quantity: 5</option>
-          <option value="sixItem">Quantity: 6</option>
-          <option value="sevenItem">Quantity: 7</option>
-          <option value="eightItem">Quantity: 8</option>
-          <option value="nineItem">Quantity: 9</option>
-          <option value="tenItem">Quantity: 10</option>
+          value={selectedQuantity}
+          onChange={(e) => setSelectedQuantity(e.target.value)}>
+          <option value="1">Quantity: 1</option>
+          <option value="2">Quantity: 2</option>
+          <option value="3">Quantity: 3</option>
+          <option value="4">Quantity: 4</option>
+          <option value="5">Quantity: 5</option>
+          <option value="6">Quantity: 6</option>
+          <option value="7">Quantity: 7</option>
+          <option value="8">Quantity: 8</option>
+          <option value="9">Quantity: 9</option>
+          <option value="10">Quantity: 10</option>
         </select>
       </div>
-      <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
+      <button
+        className="bg-amber-400 rounded-3xl px-5 py-1 my-3"
+        onClick={handleAddToCartClick}>
         Add to Cart
       </button>
+
+      {showAddedItem && (
+        <>
+          <div className="absolute inset-0 bg-zinc-100 opacity-90"></div>
+          <div className="fixed inset-0 flex justify-center items-center w-4/6 md:w-6/12 xl:w-2/6 mx-auto">
+            <ItemAdded
+              item={item}
+              quantity={selectedQuantity}
+              handleCloseButton={() => {
+                setShowAddedItem(false);
+              }}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

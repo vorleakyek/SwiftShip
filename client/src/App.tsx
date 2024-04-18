@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
+import ItemAdded from './components/ItemAddedModal';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/" element={<NavBar />}>
           <Route index element={<HomePage />} />
           <Route path="products/:itemID" element={<ItemPage />} />
+          <Route path="item" element={<ItemAdded />}></Route>
         </Route>
       </Routes>
       <Footer />
