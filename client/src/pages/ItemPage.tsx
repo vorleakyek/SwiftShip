@@ -29,9 +29,25 @@ export const ItemPage = () => {
   const { name, imageUrl, description, percentOff, originalPrice, salePrice } =
     item;
 
-  function handleAddToCartClick() {
+  function handleAddToCartClick(item: Item, quantity: number) {
     setShowAddedItem(true);
-    // window.scrollTo({top:0,behavior:'smooth'})
+    //check if "itemQuanity exist in the localstorage"
+
+    const itemsInCartString = localStorage.getItem('itemsInCart');
+    const itemsInCart: string | null = itemsInCartString
+      ? JSON.parse(itemsInCartString)
+      : null;
+
+    if (!itemsInCart) {
+      item['itemQuantity'] = quantity;
+      const addedItems = [item];
+      localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
+    } else {
+      //ensure same item should be updated the quanity instead of adding a new obj in the array
+      item['itemQuantity'] = quantity;
+      const addedItems = [...itemsInCart, item];
+      localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
+    }
   }
 
   return (
@@ -86,7 +102,7 @@ export const ItemPage = () => {
       </div>
       <button
         className="bg-amber-400 rounded-3xl px-5 py-1 my-3"
-        onClick={handleAddToCartClick}>
+        onClick={() => handleAddToCartClick(item, Number(selectedQuantity))}>
         Add to Cart
       </button>
 

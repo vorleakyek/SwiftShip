@@ -31,7 +31,9 @@ export default function ItemAdded({ item, quantity, handleCloseButton }) {
               onClick={() => navigate('/')}>
               Continue Shopping
             </button>
-            <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3 font-semibold block">
+            <button
+              className="bg-amber-400 rounded-3xl px-5 py-1 my-3 font-semibold block"
+              onClick={() => navigate('/view-cart')}>
               View Cart & Checkout
             </button>
           </div>
