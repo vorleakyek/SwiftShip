@@ -16,15 +16,15 @@ export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
   const total = price + tax;
 
   return (
-    <div className="flex">
+    <div className="flex pt-3">
       <div className="text-left">
-        <h3 className="pl-3 font-semibold">Order Summary</h3>
-        <div className="pl-10">
-          <p>Items: {totalItems}</p>
-          <p>Price: ${price.toFixed(2)}</p>
-          <p>Tax: ${tax.toFixed(2)}</p>
-          <p>Shipping: Free</p>
-          <p>Total: ${total.toFixed(2)}</p>
+        <h3 className="pl-3 font-semibold pb-2">Order Summary</h3>
+        <div className="pl-10 text-sm">
+          <p className="pb-1">Items: {totalItems}</p>
+          <p className="pb-1">Price: ${price.toFixed(2)}</p>
+          <p className="pb-1">Tax: ${tax.toFixed(2)}</p>
+          <p className="pb-1">Shipping: Free</p>
+          <p className="pb-1">Total: ${total.toFixed(2)}</p>
         </div>
       </div>
     </div>
