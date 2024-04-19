@@ -17,7 +17,6 @@ export const SaleItem: React.FC<SaleItemProps> = ({ data }: SaleItemProps) => {
 
   function handleClick() {
     navigate('/');
-    console.log(imageUrl, name, percentOff);
   }
 
   return (

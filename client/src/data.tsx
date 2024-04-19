@@ -1,3 +1,5 @@
+import { ItemInCart } from './pages/ItemPage';
+
 export type Item = {
   itemID: number;
   name: string;
@@ -9,6 +11,27 @@ export type Item = {
   percentOff: number;
   currentlyOnSale: boolean;
 };
+
+export function getLocalStorageItems() {
+  const itemsAddedInCartString = localStorage.getItem('itemsInCart');
+  const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
+    ? JSON.parse(itemsAddedInCartString)
+    : null;
+  return itemsAddedInCart;
+}
+
+export function updateLocalStorageItemQuantity(
+  item: ItemInCart,
+  itemsAddedInCart: ItemInCart[],
+  quantity: number
+) {
+  itemsAddedInCart.map((itemAdded) =>
+    itemAdded.itemID === item.itemID
+      ? (itemAdded['itemQuantity'] = quantity)
+      : itemAdded
+  );
+  localStorage.setItem('itemsInCart', JSON.stringify(itemsAddedInCart));
+}
 
 export async function getProducts(): Promise<Item[]> {
   const req = {
