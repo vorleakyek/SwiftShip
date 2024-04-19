@@ -1,5 +1,6 @@
 // import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
+// import { useState } from 'react';
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
 import './index.css';
@@ -10,24 +11,15 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
 import ViewCart from './pages/ViewCart';
+// import { AppContext } from './components/AppContext';
 
 export default function App() {
-  // const [serverData, setServerData] = useState('');
+  // const updateSelectedQuantity = (quantity:number) => setSelectedQuantity(quantity);
 
-  // useEffect(() => {
-  //   async function readServerData() {
-  //     const resp = await fetch('/api/hello');
-  //     const data = await resp.json();
-
-  //     console.log('Data from server:', data);
-
-  //     setServerData(data.message);
-  //   }
-
-  //   readServerData();
-  // }, []);
-
-  // const navigate = useNavigate();
+  // const contextValue = {
+  //   selectedQuantity,
+  //   updateSelectedQuantity
+  // };
 
   return (
     <>

@@ -1,14 +1,26 @@
 import { BsTrash } from 'react-icons/bs';
 import { HiMiniMinusSmall, HiPlusSmall } from 'react-icons/hi2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type ItemInCart } from '../pages/ItemPage';
+import { updateLocalStorageItemQuantity } from '../data';
 
 interface CartItemProps {
   item: ItemInCart;
+  itemsInCart: ItemInCart[];
+  setIsUpdated: (boolean) => void;
 }
 
-export default function CartItem({ item }: CartItemProps) {
+export default function CartItem({
+  item,
+  itemsInCart,
+  setIsUpdated,
+}: CartItemProps) {
   const [quantity, setQuantity] = useState(item.itemQuantity);
+
+  useEffect(() => {
+    updateLocalStorageItemQuantity(item, itemsInCart, quantity);
+    setIsUpdated((prev) => !prev);
+  }, [quantity]);
 
   function handleMinus() {
     setQuantity(quantity - 1);
@@ -16,6 +28,14 @@ export default function CartItem({ item }: CartItemProps) {
 
   function handlePlus() {
     setQuantity(quantity + 1);
+  }
+
+  function handleRemoveItem(removeItem: ItemInCart) {
+    const updatedItemsInCart = itemsInCart.filter(
+      (itemInCart) => itemInCart.itemID !== removeItem.itemID
+    );
+    localStorage.setItem('itemsInCart', JSON.stringify(updatedItemsInCart));
+    setIsUpdated((prev) => !prev);
   }
 
   const isDisabledMinus = quantity === 1;
@@ -32,12 +52,10 @@ export default function CartItem({ item }: CartItemProps) {
             <h2 className="font-medium mb-2 ">{item.name}</h2>
             <p className="text-xs">
               <span className="inline text-base text-rose-500 font-medium">
-                `${item.salePrice}`
+                ${item.salePrice}
               </span>{' '}
               was{' '}
-              <span className="inline line-through">
-                `${item.originalPrice}`
-              </span>
+              <span className="inline line-through">${item.originalPrice}</span>
             </p>
           </div>
         </div>
@@ -45,7 +63,7 @@ export default function CartItem({ item }: CartItemProps) {
       <div className="flex px-5 ">
         <div className="basis-1/2 text-left">
           <button>
-            <BsTrash />
+            <BsTrash onClick={() => handleRemoveItem(item)} />
           </button>
         </div>
         <div className="basis-1/2 text-right flex justify-end text-xl">

@@ -4,7 +4,7 @@ import CatalogListing from './CatalogListing';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 
 export default function NavBar() {
-  const navigate = new useNavigate();
+  const navigate = useNavigate();
   return (
     <>
       <div className="bg-blue max-w-5xl p-3">

@@ -4,6 +4,8 @@ import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import ItemAdded from '../components/ItemAddedModal';
+// import { AppContext } from '../components/AppContext';
+import { getLocalStorageItems } from '../data';
 
 export type ItemInCart = Item & {
   itemQuantity: number;
@@ -13,7 +15,7 @@ export const ItemPage = () => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
   const [showAddedItem, setShowAddedItem] = useState(false);
-  const [selectedQuantity, setSelectedQuantity] = useState('1');
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
   // const navigate = useNavigate();
 
@@ -36,10 +38,12 @@ export const ItemPage = () => {
   function handleAddToCartClick(item: Item, quantity: number) {
     setShowAddedItem(true);
     //check if "itemQuanity exist in the localstorage"
-    const itemsAddedInCartString = localStorage.getItem('itemsInCart');
-    const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
-      ? JSON.parse(itemsAddedInCartString)
-      : null;
+    // const itemsAddedInCartString = localStorage.getItem('itemsInCart');
+    // const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
+    //   ? JSON.parse(itemsAddedInCartString)
+    //   : null;
+
+    const itemsAddedInCart = getLocalStorageItems();
 
     if (!itemsAddedInCart) {
       const addedItems: ItemInCart[] = [];
@@ -106,22 +110,22 @@ export const ItemPage = () => {
           className="bg-zinc-100 p-2"
           name="quantityOfItem"
           value={selectedQuantity}
-          onChange={(e) => setSelectedQuantity(e.target.value)}>
-          <option value="1">Quantity: 1</option>
-          <option value="2">Quantity: 2</option>
-          <option value="3">Quantity: 3</option>
-          <option value="4">Quantity: 4</option>
-          <option value="5">Quantity: 5</option>
-          <option value="6">Quantity: 6</option>
-          <option value="7">Quantity: 7</option>
-          <option value="8">Quantity: 8</option>
-          <option value="9">Quantity: 9</option>
-          <option value="10">Quantity: 10</option>
+          onChange={(e) => setSelectedQuantity(Number(e.target.value))}>
+          <option value={1}>Quantity: 1</option>
+          <option value={2}>Quantity: 2</option>
+          <option value={3}>Quantity: 3</option>
+          <option value={4}>Quantity: 4</option>
+          <option value={5}>Quantity: 5</option>
+          <option value={6}>Quantity: 6</option>
+          <option value={7}>Quantity: 7</option>
+          <option value={8}>Quantity: 8</option>
+          <option value={9}>Quantity: 9</option>
+          <option value={10}>Quantity: 10</option>
         </select>
       </div>
       <button
         className="bg-amber-400 rounded-3xl px-5 py-1 my-3"
-        onClick={() => handleAddToCartClick(item, Number(selectedQuantity))}>
+        onClick={() => handleAddToCartClick(item, selectedQuantity)}>
         Add to Cart
       </button>
 
