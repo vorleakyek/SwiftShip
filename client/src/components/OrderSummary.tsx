@@ -15,6 +15,8 @@ export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
   const tax = price * 0.1;
   const total = price + tax;
 
+  const shippingCost = price >= 35 ? 0 : 8.99;
+
   return (
     <div className="flex pt-3">
       <div className="text-left">
@@ -23,7 +25,9 @@ export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
           <p className="pb-1">Items: {totalItems}</p>
           <p className="pb-1">Price: ${price.toFixed(2)}</p>
           <p className="pb-1">Tax: ${tax.toFixed(2)}</p>
-          <p className="pb-1">Shipping: Free</p>
+          <p className="pb-1">
+            Shipping: {shippingCost === 0 ? 'Free' : '$8.99'}
+          </p>
           <p className="pb-1">Total: ${total.toFixed(2)}</p>
         </div>
       </div>

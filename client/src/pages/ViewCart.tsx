@@ -1,12 +1,17 @@
 import YellowButton from '../components/YellowButton';
 import CartItem from '../components/CartItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { type ItemInCart } from './ItemPage.tsx';
 import OrderSummary from '../components/OrderSummary.tsx';
+import { AppContext } from '../components/AppContext';
+import { useNavigate } from 'react-router-dom';
 
-export default function ViewCart() {
-  const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
+export default function ViewCart({ setItemsInCart }) {
+  // const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
+
   const [isUpdated, setIsUpdated] = useState(false);
+  const { itemsInCart } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const itemsAddedInCartString = localStorage.getItem('itemsInCart');
@@ -17,7 +22,7 @@ export default function ViewCart() {
   }, [isUpdated]);
 
   function handleCheckout() {
-    console.log('checkout');
+    navigate('/check-out');
   }
 
   const isEmptyCart = itemsInCart.length === 0 ? true : false;

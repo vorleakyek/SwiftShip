@@ -1,11 +1,10 @@
 import { createContext } from 'react';
+import { ItemInCart } from '../pages/ItemPage';
 
 type AppContextValues = {
-  selectedQuantity: number;
-  updateSelectedQuantity: (quantity: number) => void;
+  itemsInCart: ItemInCart[];
 };
 
 export const AppContext = createContext<AppContextValues>({
-  selectedQuantity: 1,
-  updateSelectedQuantity: () => undefined,
+  itemsInCart: [],
 });
