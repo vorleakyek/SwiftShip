@@ -15,13 +15,16 @@ export default function CheckoutPage({ setItemsInCart }) {
 
   return (
     <div>
-      <div>
+      <div className="mt-3">
         <Link to={'/view-cart'}>
           <p className="text-left text-sm  text-blue-700">
             {' '}
             <IoIosArrowBack className="inline text-blue-600" /> Return to Cart
           </p>
         </Link>
+      </div>
+      <div className="bg-neutral-300 py-1 pl-3 mt-3">
+        <p className="text-left text-lg font-semibold">3. Review</p>
       </div>
       <div>
         <h2 className="text-lg text-left pt-3 pl-3">Items to ship</h2>
