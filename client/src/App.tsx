@@ -14,6 +14,7 @@ import ViewCart from './pages/ViewCart';
 import CheckoutPage from './pages/CheckoutPage';
 import { AppContext } from './components/AppContext';
 import { ItemInCart } from './pages/ItemPage';
+import GuestCheckoutPage from './pages/GuestCheckoutPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
@@ -39,6 +40,7 @@ export default function App() {
             path="check-out"
             element={<CheckoutPage setItemsInCart={setItemsInCart} />}
           />
+          <Route path="guest-checkout" element={<GuestCheckoutPage />} />
         </Route>
       </Routes>
       <Footer />
