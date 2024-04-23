@@ -14,11 +14,10 @@ export default function CheckoutPage({ setItemsInCart }) {
   }, []);
 
   return (
-    <div>
+    <div className="max-w-5xl">
       <div className="mt-3">
         <Link to={'/view-cart'}>
           <p className="text-left text-sm  text-blue-700">
-            {' '}
             <IoIosArrowBack className="inline text-blue-600" /> Return to Cart
           </p>
         </Link>
