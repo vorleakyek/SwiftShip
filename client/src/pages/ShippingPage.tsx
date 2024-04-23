@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { states } from '../data';
 
@@ -11,6 +11,8 @@ export default function ShippingPage() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [selectedState, setSelectedState] = useState('');
 
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-5xl text-left mt-2">
       <Link to={'/view-cart'}>
@@ -22,7 +24,10 @@ export default function ShippingPage() {
       </div>
       <div className="flex ml-7">
         <div>
-          <form>
+          <form
+            onSubmit={() => {
+              navigate('/payment');
+            }}>
             <label className="block">
               First Name:
               <input
@@ -78,7 +83,7 @@ export default function ShippingPage() {
             <label className="block">
               Zip Code:
               <input
-                type="text"
+                type="number"
                 className="input-box"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
@@ -87,7 +92,7 @@ export default function ShippingPage() {
             <label className="block">
               Phone Number:
               <input
-                type="text"
+                type="tel"
                 className="input-box"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}

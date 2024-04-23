@@ -16,6 +16,7 @@ import { AppContext } from './components/AppContext';
 import { ItemInCart } from './pages/ItemPage';
 import GuestCheckoutPage from './pages/GuestCheckoutPage';
 import ShippingPage from './pages/ShippingPage';
+import PaymentPage from './pages/PaymentPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
@@ -43,6 +44,7 @@ export default function App() {
           />
           <Route path="guest-checkout" element={<GuestCheckoutPage />} />
           <Route path="shipping" element={<ShippingPage />} />
+          <Route path="payment" element={<PaymentPage />} />
         </Route>
       </Routes>
       <Footer />

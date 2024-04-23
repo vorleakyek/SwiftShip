@@ -49,3 +49,7 @@
   padding: 2px;
   margin: 10px;
 }
+
+.input-box:placeholder-shown:not(:focus) + label {
+  color: red;
+}
