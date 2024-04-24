@@ -1,5 +1,5 @@
 import OrderSummary from '../components/OrderSummary';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../components/AppContext';
 import { useContext, useEffect } from 'react';
 import YellowButton from '../components/YellowButton';
@@ -7,6 +7,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 
 export default function CheckoutPage({ setItemsInCart }) {
   const { itemsInCart } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedItemsInCart = JSON.parse(localStorage.getItem('itemsInCart')!);
@@ -14,11 +15,10 @@ export default function CheckoutPage({ setItemsInCart }) {
   }, []);
 
   return (
-    <div>
+    <div className="max-w-5xl">
       <div className="mt-3">
-        <Link to={'/view-cart'}>
+        <Link to={'/payment'}>
           <p className="text-left text-sm  text-blue-700">
-            {' '}
             <IoIosArrowBack className="inline text-blue-600" /> Return to Cart
           </p>
         </Link>
@@ -45,7 +45,7 @@ export default function CheckoutPage({ setItemsInCart }) {
       <OrderSummary itemsInCart={itemsInCart} />
       <YellowButton
         content="Place Order"
-        handleClick={() => console.log('click')}
+        handleClick={() => navigate('/order-confirmation')}
       />
     </div>
   );

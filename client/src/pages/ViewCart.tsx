@@ -7,8 +7,6 @@ import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function ViewCart({ setItemsInCart }) {
-  // const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
-
   const [isUpdated, setIsUpdated] = useState(false);
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
@@ -22,7 +20,7 @@ export default function ViewCart({ setItemsInCart }) {
   }, [isUpdated]);
 
   function handleCheckout() {
-    navigate('/check-out');
+    navigate('/guest-checkout');
   }
 
   const isEmptyCart = itemsInCart.length === 0 ? true : false;
