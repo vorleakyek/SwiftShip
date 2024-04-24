@@ -1,6 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function PaymentPage() {
+  const navigate = useNavigate();
+
+  function handleSubmit() {
+    navigate('/check-out');
+  }
+
   return (
     <div className="max-w-5xl text-left mt-2">
       <Link to={'/shipping'}>
@@ -16,7 +22,7 @@ export default function PaymentPage() {
           <h1 className="font-semibold">Payment Information </h1>
         </div>
         <div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="pt-3">
               <p>Credit Card</p>
             </div>
