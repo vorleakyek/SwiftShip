@@ -48,6 +48,7 @@
   border: 1px solid gray;
   padding: 2px;
   margin: 10px;
+  margin-bottom: 5px;
 }
 
 .input-box:placeholder-shown:not(:focus) + label {

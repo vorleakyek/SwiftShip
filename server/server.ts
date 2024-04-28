@@ -93,6 +93,57 @@ app.get('/api/products/:productId', async (req, res, next) => {
   }
 });
 
+type Shipping = {
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  state: string;
+  zipCode: string;
+  email: string;
+};
+
+app.post('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const { address, city, firstName, lastName, phoneNumber, state, zipCode } =
+      req.body as Partial<Shipping>;
+
+    if (
+      !address ||
+      !city ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !state ||
+      !zipCode
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      insert into "guestOrders" ("guestFirstName","guestLastName", "guestAddress", "guestCity", "guestState", "guestZipCode", "guestPhoneNumber")
+      values ($1, $2, $3, $4, $5, $6, $7)
+      returning *
+    `;
+    const params = [
+      firstName,
+      lastName,
+      address,
+      city,
+      state,
+      zipCode,
+      phoneNumber,
+    ];
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/shipping route', err);
+  }
+});
+
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.

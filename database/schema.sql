@@ -34,13 +34,36 @@ CREATE TABLE "products" (
 );
 
 CREATE TABLE "users" (
-  "userID" int PRIMARY KEY,
-  "fullName" varchar,
-  "email" varchar UNIQUE,
-  "address" varchar
+  "userID" serial PRIMARY KEY,
+  "fullName" varchar(50),
+  "email" varchar(50) UNIQUE,
+  "address" varchar(100)
 );
 
 CREATE TABLE "categories" (
   "categoryID" int PRIMARY KEY,
   "categoryName" varchar
+);
+
+CREATE TABLE orders (
+  orderID SERIAL PRIMARY KEY,
+  userID INT, -- Foreign key referencing users.userID
+  orderDate TIMESTAMP,
+  totalAmount DECIMAL(10, 2)
+  -- Other order-related fields
+);
+
+CREATE TABLE "guestOrders" (
+  "orderID" SERIAL PRIMARY KEY,
+  "guestEmail" VARCHAR(50),
+  "guestFirstName" VARCHAR(50),
+  "guestLastName" VARCHAR(50),
+  "guestAddress" VARCHAR(100),
+  "guestCity" VARCHAR(50),
+  "guestState" VARCHAR(50),
+  "guestZipCode" VARCHAR(50),
+  "guestPhoneNumber" VARCHAR(50),
+  "orderDate" TIMESTAMP,
+  "totalAmount" DECIMAL(10, 2)
+  -- Other order-related fields
 );
