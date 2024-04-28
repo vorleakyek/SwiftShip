@@ -99,15 +99,45 @@ type Shipping = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  state: string;
+  selectedState: string;
   zipCode: string;
   email: string;
 };
 
+app.get('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const sql = `
+      select *
+      from "guestOrders"
+      where "orderID" = $1
+    `;
+
+    const param = [3];
+    const result = await db.query(sql, param);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the orderID`);
+    }
+
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log('cannot retrieved shipping info');
+  }
+});
+
 app.post('/api/guest-checkout/shipping', async (req, res, next) => {
   try {
-    const { address, city, firstName, lastName, phoneNumber, state, zipCode } =
-      req.body as Partial<Shipping>;
+    const {
+      address,
+      city,
+      firstName,
+      lastName,
+      phoneNumber,
+      selectedState,
+      zipCode,
+    } = req.body as Partial<Shipping>;
 
     if (
       !address ||
@@ -115,7 +145,7 @@ app.post('/api/guest-checkout/shipping', async (req, res, next) => {
       !firstName ||
       !lastName ||
       !phoneNumber ||
-      !state ||
+      !selectedState ||
       !zipCode
     ) {
       throw new Error('All fields are required.');
@@ -130,7 +160,7 @@ app.post('/api/guest-checkout/shipping', async (req, res, next) => {
       lastName,
       address,
       city,
-      state,
+      selectedState,
       zipCode,
       phoneNumber,
     ];

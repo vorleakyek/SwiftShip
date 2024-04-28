@@ -45,6 +45,22 @@ export async function getProducts(): Promise<Item[]> {
   return await res.json();
 }
 
+// export async function getShippingInformation () {
+//   const req = {
+//     method:'GET',
+//     headers: {
+//       'content-Type':'application/json'
+//     }
+//   }
+//   const res = await fetch('api/guest-checkout/shipping',req);
+//   if (!res.ok) {
+//     alert('error');
+//     throw new Error(`fetch Error ${res.status}`);
+//   }
+//   const shippingInfo = await res.json();
+//   console.log(shippingInfo);
+// }
+
 export async function getItem(itemID: number): Promise<Item> {
   const req = {
     method: 'GET',

@@ -45,12 +45,32 @@
 }
 
 .input-box {
-  border: 1px solid gray;
   padding: 2px;
   margin: 10px;
   margin-bottom: 5px;
 }
 
-.input-box:placeholder-shown:not(:focus) + label {
-  color: red;
+.gray-border {
+  outline: none;
+  border: 1px solid gray;
+}
+
+.red-border {
+  outline: none;
+  border: 1px solid red;
+}
+
+.red-border:focus {
+  border: 2px solid red;
+}
+
+.gray-border:focus {
+  border: 2px solid gray;
+}
+
+/* Remove spinner controls from number input */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
 }
