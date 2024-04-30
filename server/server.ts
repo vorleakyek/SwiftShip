@@ -94,6 +94,7 @@ app.get('/api/products/:productId', async (req, res, next) => {
 });
 
 type Shipping = {
+  orderID: number;
   address: string;
   city: string;
   firstName: string;
@@ -106,13 +107,16 @@ type Shipping = {
 
 app.get('/api/guest-checkout/shipping', async (req, res, next) => {
   try {
+    const orderID = Number(req.query.orderID);
+    console.log(req.query);
+
     const sql = `
       select *
       from "guestOrders"
       where "orderID" = $1
     `;
 
-    const param = [3];
+    const param = [orderID];
     const result = await db.query(sql, param);
 
     if (!result.rows[0]) {
@@ -164,6 +168,64 @@ app.post('/api/guest-checkout/shipping', async (req, res, next) => {
       zipCode,
       phoneNumber,
     ];
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/shipping route', err);
+  }
+});
+
+app.put('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const {
+      orderID,
+      address,
+      city,
+      firstName,
+      lastName,
+      phoneNumber,
+      selectedState,
+      zipCode,
+    } = req.body as Partial<Shipping>;
+
+    if (
+      !orderID ||
+      !address ||
+      !city ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !selectedState ||
+      !zipCode
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      UPDATE "guestOrders"
+      SET "guestFirstName" = $1,
+          "guestLastName" = $2,
+          "guestAddress" = $3,
+          "guestCity" = $4,
+          "guestState" = $5,
+          "guestZipCode" = $6,
+          "guestPhoneNumber" = $7
+      WHERE "orderID" = $8
+      RETURNING *
+    `;
+    const params = [
+      firstName,
+      lastName,
+      address,
+      city,
+      selectedState,
+      zipCode,
+      phoneNumber,
+      orderID,
+    ];
+
     console.log(params);
     const result = await db.query(sql, params);
     const response = result.rows[0];

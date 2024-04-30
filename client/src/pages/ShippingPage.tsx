@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { states } from '../data';
 
-export default function ShippingPage() {
+export default function ShippingPage({ orderID, setOrderID }) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,28 +12,25 @@ export default function ShippingPage() {
     phoneNumber: '',
     selectedState: '',
   });
-  const [isError, setIsError] = useState(false);
 
-  async function getShippingInformation() {
-    const req = {
-      method: 'GET',
-      headers: {
-        'content-Type': 'application/json',
-      },
-    };
-    const res = await fetch('api/guest-checkout/shipping', req);
-    if (!res.ok) {
-      alert('error');
-      throw new Error(`fetch Error ${res.status}`);
-    }
-    const shippingInfo = await res.json();
-    console.log(shippingInfo);
-    return shippingInfo;
-  }
+  const {
+    firstName,
+    lastName,
+    address,
+    city,
+    zipCode,
+    phoneNumber,
+    selectedState,
+  } = formData;
+
+  const [isError, setIsError] = useState(false);
+  const navigate = useNavigate();
+
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function getInfo() {
-      const existing = await getShippingInformation();
+      const existing = await getShippingInformation(orderID);
       console.log('existing', existing);
       // console.log('guest', existing.guestState)
 
@@ -47,22 +44,37 @@ export default function ShippingPage() {
           phoneNumber: existing.guestPhoneNumber,
           selectedState: existing.guestState,
         });
+
+      // console.log('isEditing', isEditing)
       return existing;
     }
-    getInfo();
+    if (orderID) {
+      setIsEditing(true);
+    }
+
+    orderID && getInfo();
   }, []);
 
-  const navigate = useNavigate();
-
-  const {
-    firstName,
-    lastName,
-    address,
-    city,
-    zipCode,
-    phoneNumber,
-    selectedState,
-  } = formData;
+  async function getShippingInformation(orderID: number) {
+    const req = {
+      method: 'GET',
+      headers: {
+        'content-Type': 'application/json',
+      },
+    };
+    const res = await fetch(
+      `api/guest-checkout/shipping?orderID=${orderID}`,
+      req
+    );
+    if (!res.ok) {
+      alert('error');
+      throw new Error(`fetch Error ${res.status}`);
+    }
+    const shippingInfo = await res.json();
+    console.log(shippingInfo.orderID);
+    // setOrderID(shippingInfo.orderID);
+    return shippingInfo;
+  }
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
@@ -73,8 +85,11 @@ export default function ShippingPage() {
       [name]: value,
     });
   };
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // setIsEditing(true)
 
     if (
       !firstName ||
@@ -86,24 +101,50 @@ export default function ShippingPage() {
       !selectedState
     ) {
       setIsError(true);
-    }
+    } else {
+      setIsError(false);
 
-    if (!isError) {
-      try {
-        const req = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        };
-        const res = await fetch('api/guest-checkout/shipping', req);
-        if (!res.ok) {
-          alert('error');
-          throw new Error(`fetch Error ${res.status}`);
+      console.log('isEditing in handleSubmit', isEditing);
+
+      if (!isEditing) {
+        try {
+          const req = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          };
+          const res = await fetch('api/guest-checkout/shipping', req);
+          if (!res.ok) {
+            alert('error');
+            throw new Error(`fetch Error ${res.status}`);
+          }
+          const shippingInfo = await res.json();
+          setOrderID(shippingInfo.orderID);
+          console.log('shipping info', shippingInfo, shippingInfo.orderID);
+        } catch (err) {
+          alert(`Error registering user: ${err}`);
         }
-        const shippingInfo = await res.json();
-        console.log(shippingInfo);
-      } catch (err) {
-        alert(`Error registering user: ${err}`);
+      } else {
+        //update the info
+        try {
+          const req = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderID: orderID, ...formData }),
+          };
+
+          console.log('update req', req);
+          const res = await fetch('api/guest-checkout/shipping', req);
+          if (!res.ok) {
+            alert('error');
+            throw new Error(`fetch Error ${res.status}`);
+          }
+          const shippingInfo = await res.json();
+          setOrderID(shippingInfo.orderID);
+          console.log('shipping info', shippingInfo, shippingInfo.orderID);
+        } catch (err) {
+          alert(`Error registering user: ${err}`);
+        }
       }
 
       navigate('/payment');
