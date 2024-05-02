@@ -1,9 +1,77 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { FormEvent, useState, useEffect } from 'react';
+import {getShippingInformation } from '../data';
 
-export default function PaymentPage() {
+type Shipping = {
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  selectedState: string;
+  zipCode: string;
+  email: string;
+};
+
+export default function PaymentPage({orderID}) {
   const navigate = useNavigate();
+  const [card, setCard] = useState('');
+  const [email, setEmail] = useState('');
+  const [billingInfo, setBillingInfo] = useState<Shipping>({
+    address: '',
+    city: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    selectedState: '',
+    zipCode: '',
+    email: ''
+});
 
-  function handleSubmit() {
+  const {
+    firstName,
+    lastName,
+    address,
+    city,
+    zipCode,
+    phoneNumber,
+    selectedState,
+  } = billingInfo;
+
+
+  const [isError, setIsError] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+
+  useEffect(() => {
+    async function getInfo() {
+      const existing = await getShippingInformation(orderID);
+
+      if (existing)
+        setBillingInfo({
+          firstName: existing.guestFirstName,
+          lastName: existing.guestLastName,
+          address: existing.guestAddress,
+          city: existing.guestCity,
+          zipCode: existing.guestZipCode,
+          phoneNumber: existing.guestPhoneNumber,
+          selectedState: existing.guestState,
+        });
+    }
+    // if (orderID) {
+    //   setIsEditing(true);
+    // }
+   getInfo();
+  }, []);
+
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if(!card || !email) {
+      return;
+    }
+
     navigate('/check-out');
   }
 
@@ -47,16 +115,16 @@ export default function PaymentPage() {
             <div className="pt-3">
               <label>
                 Debit/Credit Card Number
-                <input type="tel" className="input-box block" />
+                <input type="tel" className="input-box gray-border block" />
               </label>
             </div>
 
             <div className="pt-5">
               <p className="font-semibold">Shipping and billing address</p>
               <div className="pt-3">
-                <p>First Last</p>
-                <p>Address:</p>
-                <p>(xxx) xxx-xxxx</p>
+                <p>Name: {firstName} {lastName}</p>
+                <p>Address: {address}</p>
+                <p>Phone: {phoneNumber}</p>
               </div>
             </div>
 
@@ -64,7 +132,7 @@ export default function PaymentPage() {
               <p className="font-semibold">Order Contact Information</p>
               <label>
                 Email
-                <input type="email" className="input-box" />
+                <input type="email" className="input-box gray-border" />
               </label>
             </div>
 

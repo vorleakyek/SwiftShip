@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
-import { states } from '../data';
+import { states, getShippingInformation } from '../data';
 
 export default function ShippingPage({ orderID, setOrderID }) {
   const [formData, setFormData] = useState({
@@ -55,26 +55,7 @@ export default function ShippingPage({ orderID, setOrderID }) {
     orderID && getInfo();
   }, []);
 
-  async function getShippingInformation(orderID: number) {
-    const req = {
-      method: 'GET',
-      headers: {
-        'content-Type': 'application/json',
-      },
-    };
-    const res = await fetch(
-      `api/guest-checkout/shipping?orderID=${orderID}`,
-      req
-    );
-    if (!res.ok) {
-      alert('error');
-      throw new Error(`fetch Error ${res.status}`);
-    }
-    const shippingInfo = await res.json();
-    console.log(shippingInfo.orderID);
-    // setOrderID(shippingInfo.orderID);
-    return shippingInfo;
-  }
+
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>

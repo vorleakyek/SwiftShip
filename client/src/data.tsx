@@ -73,6 +73,27 @@ export async function getItem(itemID: number): Promise<Item> {
   return await res.json();
 }
 
+export async function getShippingInformation(orderID: number) {
+  const req = {
+    method: 'GET',
+    headers: {
+      'content-Type': 'application/json',
+    },
+  };
+  const res = await fetch(
+    `api/guest-checkout/shipping?orderID=${orderID}`,
+    req
+  );
+  if (!res.ok) {
+    alert('error');
+    throw new Error(`fetch Error ${res.status}`);
+  }
+  const shippingInfo = await res.json();
+  console.log(shippingInfo.orderID);
+  // setOrderID(shippingInfo.orderID);
+  return shippingInfo;
+}
+
 // export const products: Item[] = [
 //   {
 //     itemId: 1,
