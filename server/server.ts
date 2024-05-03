@@ -93,6 +93,149 @@ app.get('/api/products/:productId', async (req, res, next) => {
   }
 });
 
+type Shipping = {
+  orderID: number;
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  selectedState: string;
+  zipCode: string;
+  email: string;
+};
+
+app.get('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const orderID = Number(req.query.orderID);
+    console.log(req.query);
+
+    const sql = `
+      select *
+      from "guestOrders"
+      where "orderID" = $1
+    `;
+
+    const param = [orderID];
+    const result = await db.query(sql, param);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the orderID`);
+    }
+
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log('cannot retrieved shipping info');
+  }
+});
+
+app.post('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const {
+      address,
+      city,
+      firstName,
+      lastName,
+      phoneNumber,
+      selectedState,
+      zipCode,
+    } = req.body as Partial<Shipping>;
+
+    if (
+      !address ||
+      !city ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !selectedState ||
+      !zipCode
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      insert into "guestOrders" ("guestFirstName","guestLastName", "guestAddress", "guestCity", "guestState", "guestZipCode", "guestPhoneNumber")
+      values ($1, $2, $3, $4, $5, $6, $7)
+      returning *
+    `;
+    const params = [
+      firstName,
+      lastName,
+      address,
+      city,
+      selectedState,
+      zipCode,
+      phoneNumber,
+    ];
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/shipping route', err);
+  }
+});
+
+app.put('/api/guest-checkout/shipping', async (req, res, next) => {
+  try {
+    const {
+      orderID,
+      address,
+      city,
+      firstName,
+      lastName,
+      phoneNumber,
+      selectedState,
+      zipCode,
+    } = req.body as Partial<Shipping>;
+
+    if (
+      !orderID ||
+      !address ||
+      !city ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !selectedState ||
+      !zipCode
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      UPDATE "guestOrders"
+      SET "guestFirstName" = $1,
+          "guestLastName" = $2,
+          "guestAddress" = $3,
+          "guestCity" = $4,
+          "guestState" = $5,
+          "guestZipCode" = $6,
+          "guestPhoneNumber" = $7
+      WHERE "orderID" = $8
+      RETURNING *
+    `;
+    const params = [
+      firstName,
+      lastName,
+      address,
+      city,
+      selectedState,
+      zipCode,
+      phoneNumber,
+      orderID,
+    ];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/shipping route', err);
+  }
+});
+
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.

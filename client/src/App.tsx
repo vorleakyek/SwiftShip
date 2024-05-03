@@ -21,6 +21,7 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
+  const [orderID, setOrderID] = useState(3);
 
   const contextValue = {
     itemsInCart,
@@ -39,13 +40,18 @@ export default function App() {
             path="view-cart"
             element={<ViewCart setItemsInCart={setItemsInCart} />}
           />
+          <Route path="guest-checkout" element={<GuestCheckoutPage />} />
+          <Route
+            path="shipping"
+            element={<ShippingPage orderID={orderID} setOrderID={setOrderID} />}
+          />
+          <Route path="payment" element={<PaymentPage orderID={orderID} />} />
           <Route
             path="check-out"
-            element={<CheckoutPage setItemsInCart={setItemsInCart} />}
+            element={
+              <CheckoutPage setItemsInCart={setItemsInCart} orderID={orderID} />
+            }
           />
-          <Route path="guest-checkout" element={<GuestCheckoutPage />} />
-          <Route path="shipping" element={<ShippingPage />} />
-          <Route path="payment" element={<PaymentPage />} />
           <Route
             path="order-confirmation"
             element={<OrderConfirmationPage />}
