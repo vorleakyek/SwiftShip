@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FormEvent, useState, useEffect } from 'react';
-import {getShippingInformation } from '../data';
+import { getShippingInformation } from '../data';
 
 type Shipping = {
   address: string;
@@ -10,10 +10,9 @@ type Shipping = {
   phoneNumber: string;
   selectedState: string;
   zipCode: string;
-  email: string;
 };
 
-export default function PaymentPage({orderID}) {
+export default function PaymentPage({ orderID }) {
   const navigate = useNavigate();
   const [card, setCard] = useState('');
   const [email, setEmail] = useState('');
@@ -25,8 +24,7 @@ export default function PaymentPage({orderID}) {
     phoneNumber: '',
     selectedState: '',
     zipCode: '',
-    email: ''
-});
+  });
 
   const {
     firstName,
@@ -38,10 +36,8 @@ export default function PaymentPage({orderID}) {
     selectedState,
   } = billingInfo;
 
-
   const [isError, setIsError] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-
+  // const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function getInfo() {
@@ -58,21 +54,18 @@ export default function PaymentPage({orderID}) {
           selectedState: existing.guestState,
         });
     }
-    // if (orderID) {
-    //   setIsEditing(true);
-    // }
-   getInfo();
+    getInfo();
   }, []);
-
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if(!card || !email) {
-      return;
+    if (!card || !email) {
+      setIsError(true);
+    } else {
+      setIsError(false);
+      navigate('/check-out');
     }
-
-    navigate('/check-out');
   }
 
   return (
@@ -113,26 +106,71 @@ export default function PaymentPage({orderID}) {
               />
             </div>
             <div className="pt-3">
-              <label>
-                Debit/Credit Card Number
-                <input type="tel" className="input-box gray-border block" />
+              <label htmlFor="card-info">
+                <span className="mr-2 mt-3">Debit/Credit Card Number:</span>
+                <div className="ml-3">
+                  <input
+                    id="card-info"
+                    name="card-info"
+                    type="number"
+                    className={`input-box ${
+                      !card && isError ? 'red-border' : 'gray-border'
+                    } `}
+                    value={card}
+                    onChange={(e) => setCard(e.target.value)}
+                  />
+                  <span
+                    className={`text-sm text-red-600 m-0 pl-2 ${
+                      !card && isError ? '' : 'hidden'
+                    }`}>
+                    Card number field is required
+                  </span>
+                </div>
               </label>
             </div>
 
             <div className="pt-5">
               <p className="font-semibold">Shipping and billing address</p>
               <div className="pt-3">
-                <p>Name: {firstName} {lastName}</p>
-                <p>Address: {address}</p>
+                <p>
+                  Name: {firstName} {lastName}
+                </p>
+                <p className="flex">
+                  <span className="inline m-0">Address: </span>{' '}
+                  <div className="inline-block ml-1">
+                    {address},{' '}
+                    <span className="m-0">
+                      {city}, {selectedState} {zipCode}
+                    </span>
+                  </div>{' '}
+                </p>
                 <p>Phone: {phoneNumber}</p>
               </div>
             </div>
 
             <div className="pt-5">
               <p className="font-semibold">Order Contact Information</p>
-              <label>
-                Email
-                <input type="email" className="input-box gray-border" />
+
+              <label className="flex items-start" htmlFor="email">
+                <span className="mr-2 mt-3">Email:</span>
+                <div className="flex flex-col">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    className={`input-box ${
+                      !email && isError ? 'red-border' : 'gray-border'
+                    } `}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <span
+                    className={`text-sm text-red-600 m-0 pl-2 ${
+                      !email && isError ? '' : 'hidden'
+                    }`}>
+                    Email field is required
+                  </span>
+                </div>
               </label>
             </div>
 
