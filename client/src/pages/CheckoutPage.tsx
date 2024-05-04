@@ -6,7 +6,7 @@ import YellowButton from '../components/YellowButton';
 // import { IoIosArrowBack } from 'react-icons/io';
 import { getShippingInformation } from '../data';
 
-export default function CheckoutPage({ setItemsInCart, orderID }) {
+export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,totalAmount }) {
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -53,6 +53,52 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
   ); // 7 days from now
   const delivery = new Date(currentDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days from now
 
+
+  async function handlePlaceOrder() {
+    //update the orderNumber, totalAmount, orderDate
+    try {
+      const req = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderID, totalAmount }),
+      };
+
+      console.log('update req', req);
+      const res = await fetch('api/guest-checkout/order', req);
+      if (!res.ok) {
+        alert('error');
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const paymentInfo = await res.json();
+      console.log('shipping info', paymentInfo);
+    } catch (err) {
+      alert(`Error registering user: ${err}`);
+    }
+    navigate('/order-confirmation');
+  }
+
+  async function handleCancelOrder() {
+    //delete info from the database
+    try{
+      const url = `api/guest-checkout/order/${orderID}`;
+      const req = {
+        method:'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const res = await fetch(url,req);
+      if (!res.ok) {
+        alert('error');
+        throw new Error(`fetch Error ${res.status}`);
+      }
+    }catch(err){
+      alert(`Error registering user: ${err}`);
+    }
+    navigate('/');
+  }
+
   return (
     <div className="max-w-5xl">
       {/* <div className="mt-3">
@@ -93,11 +139,17 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
         </div>
       </div>
       <hr />
-      <OrderSummary itemsInCart={itemsInCart} />
-      <YellowButton
-        content="Place Order"
-        handleClick={() => navigate('/order-confirmation')}
-      />
+      <OrderSummary itemsInCart={itemsInCart} setTotalAmount={setTotalAmount}/>
+      <div>
+        <YellowButton
+          content="Cancel"
+          handleClick={handleCancelOrder}
+        />
+        <YellowButton
+          content="Place Order"
+          handleClick={handlePlaceOrder}
+        />
+      </div>
     </div>
   );
 }

@@ -15,6 +15,12 @@ INSERT INTO "users" ("userID", "fullName", "email", "address") VALUES
 (1, 'Homer Simpson', 'homer@example.com', '123 Main St'),
 (2, 'Jane Smith', 'jane@example.com', '456 Elm St');
 
+
+-- Inserting sample data into "guestOrders" table
+INSERT INTO "guestOrders" ("orderID","guestFirstName","guestLastName", "guestEmail",  "guestAddress", "guestCity", "guestState","guestZipCode", "guestPhoneNumber",  "guestCard",  "totalAmount","orderNumber" ,"createdAt")
+VALUES (3, 'Leslie', 'Hurray', 'leslie.hurray@gmail.com','31276 Rosella Views','West Gracie', 'New York', '51346','(551)309-0352', '122334-4566-112', '10.25', '7ADJ651PL', '2024-03-30 03:26:40.076619+00'),
+(5, 'Arturo', 'Armstrong', null,'381 Gretchen Loop','West Perryhaven', 'California', '79202','(929)556-3655', null, null, null,'2024-03-30 03:26:40.076619+00');
+
 -- Inserting sample data into "categories" table
 INSERT INTO "categories" ("categoryID", "categoryName") VALUES
 (1, 'Books'),
@@ -33,6 +39,7 @@ VALUES
 (103, 2, 'Men''s Nike Powder Blue Milwaukee Brewers', 'Your Milwaukee Brewers are the perfect embodiment of Wisconsin''s most cherished values of family and fun! From racing sausages at the games, down to the fans with cheese on their heads and beer in their hands, the Brew Crew have always been an extremely lively bunch.', 'https://media.kohlsimg.com/is/image/kohls/5888155?wid=805&hei=805&op_sharpen=1', 219.99, 'available', 153.99, 30, TRUE),
 (104, 3, 'Top Paw® Koala Comfy Character Cuddler Dog Bed', 'Your dog will love the time it spends relaxing in this adorable Top Paw Koala Comfy Character Cuddler Dog Bed. This fun bed comes in the shape of a cute koala bear, and is super squishy and comfortable so that your dog finds optimal comfort when he lays his head down to rest. It is also machine washable, making it a breeze to keep clean.', 'https://s7d2.scene7.com/is/image/PetSmart/5346362?$CLEARjpg$', 24.99, 'available', 18.67, 25, TRUE),
 (105, 4, '12.25-INCH HARD ANODIZED CERAMIC NONSTICK FRYING PAN', 'Made for everyday cooking and beautiful kitchen-to-table presentations, KitchenAid Hard Anodized Ceramic Cookware is finished with an easy-clean, ceramic nonstick interior and a durable hard-anodized exterior, crafted with thick, forged aluminum bases and rims to deliver excellent heat conduction and durability.', 'https://cdn.shopify.com/s/files/1/0253/4735/8797/files/Square-84817_KA_KKH_12.25in_Fry_Pan_Blue_Velvet_MainWithShadow_600x.jpg?v=1683819705', 44.99, 'available', 38.24, 15, FALSE)
+
 
 
 

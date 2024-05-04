@@ -57,16 +57,37 @@ export default function PaymentPage({ orderID }) {
     getInfo();
   }, []);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!card || !email) {
       setIsError(true);
     } else {
       setIsError(false);
+
+      try {
+        const req = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderID, card, email }),
+        };
+
+        console.log('update req', req);
+        const res = await fetch('api/guest-checkout/payment', req);
+        if (!res.ok) {
+          alert('error');
+          throw new Error(`fetch Error ${res.status}`);
+        }
+        const paymentInfo = await res.json();
+        console.log('shipping info', paymentInfo);
+      } catch (err) {
+        alert(`Error registering user: ${err}`);
+      }
+
       navigate('/check-out');
     }
-  }
+    }
+
 
   return (
     <div className="max-w-5xl text-left mt-2">

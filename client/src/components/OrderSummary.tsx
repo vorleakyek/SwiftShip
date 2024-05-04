@@ -2,9 +2,10 @@ import { ItemInCart } from '../pages/ItemPage';
 
 interface ItemsInCartProps {
   itemsInCart: ItemInCart[];
+  setTotalAmount: any;
 }
 
-export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
+export default function OrderSummary({ itemsInCart, setTotalAmount }: ItemsInCartProps) {
   let price = 0;
   let totalItems = 0;
 
@@ -14,6 +15,7 @@ export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
   });
   const tax = price * 0.1;
   const total = price + tax;
+  setTotalAmount(total.toFixed(2));
 
   const shippingCost = price >= 35 ? 0 : 8.99;
 

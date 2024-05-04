@@ -6,7 +6,7 @@ import OrderSummary from '../components/OrderSummary.tsx';
 import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function ViewCart({ setItemsInCart }) {
+export default function ViewCart({ setItemsInCart, setTotalAmount }) {
   const [isUpdated, setIsUpdated] = useState(false);
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export default function ViewCart({ setItemsInCart }) {
         />
       ))}
       {isEmptyCart && <p>There are no items added to the cart.</p>}
-      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} />}
+      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} setTotalAmount={setTotalAmount} />}
       {!isEmptyCart && (
         <YellowButton content="Checkout" handleClick={handleCheckout} />
       )}

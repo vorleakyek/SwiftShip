@@ -103,6 +103,8 @@ type Shipping = {
   selectedState: string;
   zipCode: string;
   email: string;
+  card: number;
+  totalAmount:number;
 };
 
 app.get('/api/guest-checkout/shipping', async (req, res, next) => {
@@ -236,6 +238,110 @@ app.put('/api/guest-checkout/shipping', async (req, res, next) => {
   }
 });
 
+
+app.put('/api/guest-checkout/payment', async (req, res, next) => {
+  try {
+    const {
+      orderID,
+      card,
+      email
+    } = req.body as Partial<Shipping>;
+
+    if (
+      !orderID ||
+      !card ||
+      !email
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      UPDATE "guestOrders"
+      SET "guestEmail" = $1,
+          "guestCard" = $2
+      WHERE "orderID" = $3
+      RETURNING *
+    `;
+    const params = [
+      email,
+      card,
+      orderID,
+    ];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/payment route', err);
+  }
+});
+
+
+app.put('/api/guest-checkout/order', async (req, res, next) => {
+  try {
+    const {
+      orderID,
+      totalAmount,
+    } = req.body as Partial<Shipping>;
+
+    const timeStamp = Date.now();
+    const randomNumbers = Math.floor(Math.random()*1000000);
+    const orderNumber = `${timeStamp}${randomNumbers}`;
+
+    if (
+      !orderID ||
+      !totalAmount
+    ) {
+      throw new Error('All fields are required.');
+    }
+    const sql = `
+      UPDATE "guestOrders"
+      SET "totalAmount" = $1,
+          "orderNumber" = $2
+      WHERE "orderID" = $3
+      RETURNING *
+    `;
+    const params = [
+      totalAmount,
+      orderNumber,
+      orderID,
+    ];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/payment route', err);
+  }
+});
+
+
+app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
+  try {
+    const orderID = Number(req.params.orderID);
+    if(!Number.isInteger(orderID)) {
+      throw new ClientError(400, 'entryId must be an integer');
+    }
+
+    const sql = `
+      delete from "guestOrders"
+        where "orderID" = $1
+        return *;
+    `
+    const params=[orderID];
+    const result=await db.query(sql,params);
+    const [deleted] = result.rows;
+      if (!deleted) {
+        throw new ClientError(404, `OrderID ${entryId} is not found`);
+      }
+    res.sendStatus(204);
+
+  }catch(err) {
+    next(err)
+  } })
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.
