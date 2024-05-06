@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import ItemAdded from '../components/ItemAddedModal';
 import { getLocalStorageItems } from '../data';
-// import { AppContext } from "../components/AppContext";
 
 export type ItemInCart = Item & {
   itemQuantity: number;
@@ -16,10 +15,6 @@ export const ItemPage = ({ setItemsInCart }) => {
   const [item, setItem] = useState<Item>();
   const [showAddedItem, setShowAddedItem] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-
-  // const { itemsInCart } = useContext(AppContext);
-
-  // const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -39,11 +34,6 @@ export const ItemPage = ({ setItemsInCart }) => {
 
   function handleAddToCartClick(item: Item, quantity: number) {
     setShowAddedItem(true);
-    //check if "itemQuanity exist in the localstorage"
-    // const itemsAddedInCartString = localStorage.getItem('itemsInCart');
-    // const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
-    //   ? JSON.parse(itemsAddedInCartString)
-    //   : null;
 
     const itemsAddedInCart = getLocalStorageItems();
 
@@ -52,13 +42,9 @@ export const ItemPage = ({ setItemsInCart }) => {
       const addedItem: ItemInCart = { ...item, itemQuantity: quantity };
       addedItems.push(addedItem);
       localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
-      setItemsInCart(addedItem);
+      setItemsInCart([addedItem]);
     } else {
-      //updating the quantity of an existing added item
-      // itemsAddedInCart.map((itemAdded)=> itemAdded.itemID === item.itemID ? itemAdded['itemQuantity'] = quantity : itemAdded);
-
       let isFound = false;
-
       itemsAddedInCart.map((itemAdded) => {
         if (itemAdded.itemID === item.itemID) {
           itemAdded['itemQuantity'] = quantity;

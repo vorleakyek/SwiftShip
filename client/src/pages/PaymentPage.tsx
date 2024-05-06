@@ -156,7 +156,7 @@ export default function PaymentPage({ orderID }) {
                 <p>
                   Name: {firstName} {lastName}
                 </p>
-                <p className="flex">
+                <div className="flex">
                   <span className="inline m-0">Address: </span>{' '}
                   <div className="inline-block ml-1">
                     {address},{' '}
@@ -164,7 +164,7 @@ export default function PaymentPage({ orderID }) {
                       {city}, {selectedState} {zipCode}
                     </span>
                   </div>{' '}
-                </p>
+                </div>
                 <p>Phone: {phoneNumber}</p>
               </div>
             </div>

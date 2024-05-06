@@ -1,4 +1,4 @@
-import OrderSummary from '../components/OrderSummary';
+// import OrderSummary from '../components/OrderSummary';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../components/AppContext';
 import { useContext, useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import YellowButton from '../components/YellowButton';
 // import { IoIosArrowBack } from 'react-icons/io';
 import { getShippingInformation } from '../data';
 
-export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,totalAmount }) {
+export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, setOrderSummary }) {
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -19,8 +19,13 @@ export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,t
     zipCode: '',
   });
 
+  const [earlyArrivalDate, setEarlyArrivalDate] = useState('');
+  const [lateDeliveryDate, setLateDeliveryDate] =useState('')
+
   const { firstName, lastName, address, city, zipCode, selectedState } =
     guestInfo;
+
+  const {totalItems, totalAmount, price, shippingCost, tax} = orderSummary;
 
   useEffect(() => {
     const storedItemsInCart = JSON.parse(localStorage.getItem('itemsInCart')!);
@@ -40,6 +45,15 @@ export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,t
         });
     }
     getInfo();
+
+    const currentDate = new Date();
+    const earlyArrival = new Date(
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    ); // 7 days from now
+    const delivery = new Date(currentDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days from now
+
+    setEarlyArrivalDate(formatDate(earlyArrival));
+    setLateDeliveryDate(formatDate(delivery));
   }, []);
 
   function formatDate(date) {
@@ -47,20 +61,14 @@ export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,t
     return date.toLocaleDateString('en-US', options);
   }
 
-  const currentDate = new Date();
-  const earlyArrival = new Date(
-    currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
-  ); // 7 days from now
-  const delivery = new Date(currentDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days from now
-
-
   async function handlePlaceOrder() {
     //update the orderNumber, totalAmount, orderDate
     try {
+      setOrderSummary((prev)=>({...prev, earlyDeliveryDate: earlyArrivalDate,lateDeliveryDate}))
       const req = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderID, totalAmount }),
+        body: JSON.stringify({ orderID, orderSummary }),
       };
 
       console.log('update req', req);
@@ -122,24 +130,39 @@ export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,t
         </div>
         <div className="text-left text-sm pl-10">
           <p className="pb-1">
-            Arriving {formatDate(earlyArrival)} - {formatDate(delivery)}
+            Arriving {earlyArrivalDate} - {lateDeliveryDate}
           </p>
           <p className="pb-1">
             Name: {firstName} {lastName}
           </p>
-          <p className="flex pb-1 mb-3">
-            <span className="inline m-0">Address: </span>{' '}
+          <div className="flex pb-1 mb-3">
+            <span className="inline m-0">Address: </span>
             <div className="inline-block ml-1">
-              {address},{' '}
+              {address},
               <span className="m-0">
                 {city}, {selectedState} {zipCode}
               </span>
-            </div>{' '}
-          </p>
+            </div>
+          </div>
         </div>
       </div>
       <hr />
-      <OrderSummary itemsInCart={itemsInCart} setTotalAmount={setTotalAmount}/>
+
+      <div className="flex pt-3">
+        <div className="text-left">
+          <h3 className="pl-3 font-semibold pb-2">Order Summary</h3>
+          <div className="pl-10 text-sm">
+            <p className="pb-1">Items: {totalItems}</p>
+            <p className="pb-1">Price: ${price}</p>
+            <p className="pb-1">Tax: ${tax}</p>
+            <p className="pb-1">
+              Shipping: {shippingCost === 0 ? 'Free' : '$8.99'}
+            </p>
+            <p className="pb-1">Total: ${totalAmount.toFixed(2)}</p>
+          </div>
+        </div>
+      </div>
+
       <div>
         <YellowButton
           content="Cancel"
@@ -153,3 +176,6 @@ export default function CheckoutPage({ setItemsInCart, orderID, setTotalAmount,t
     </div>
   );
 }
+
+
+//Should remove the items in carts and updat the state properly

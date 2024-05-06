@@ -12,7 +12,7 @@ import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
 import ViewCart from './pages/ViewCart';
 import CheckoutPage from './pages/CheckoutPage';
-import { AppContext } from './components/AppContext';
+import { type OrderSummary,AppContext } from './components/AppContext';
 import { ItemInCart } from './pages/ItemPage';
 import GuestCheckoutPage from './pages/GuestCheckoutPage';
 import ShippingPage from './pages/ShippingPage';
@@ -21,11 +21,21 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
-  const [orderID, setOrderID] = useState('');
-  const [totalAmount, setTotalAmount] = useState('');
+  const [orderID, setOrderID] = useState(0);
+  const [orderSummary, setOrderSummary] = useState<OrderSummary>({
+    totalItems: 0,
+    price: 0,
+    tax: 0,
+    shippingCost: 0,
+    totalAmount: 0,
+    earlyDeliveryDate: '',
+    lateDeliveryDate: ''
+  });
 
   const contextValue = {
     itemsInCart,
+    orderSummary,
+    orderID
   };
 
   return (
@@ -39,7 +49,7 @@ export default function App() {
           />
           <Route
             path="view-cart"
-            element={<ViewCart setItemsInCart={setItemsInCart} setTotalAmount={setTotalAmount} />}
+            element={<ViewCart setItemsInCart={setItemsInCart} setOrderSummary={setOrderSummary} />}
           />
           <Route path="guest-checkout" element={<GuestCheckoutPage />} />
           <Route
@@ -50,7 +60,7 @@ export default function App() {
           <Route
             path="check-out"
             element={
-              <CheckoutPage setItemsInCart={setItemsInCart} orderID={orderID} totalAmount={totalAmount} setTotalAmount={setTotalAmount}/>
+              <CheckoutPage setItemsInCart={setItemsInCart} orderID={orderID} orderSummary={orderSummary} setOrderSummary={setOrderSummary} />
             }
           />
           <Route

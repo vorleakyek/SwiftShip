@@ -6,7 +6,7 @@ import OrderSummary from '../components/OrderSummary.tsx';
 import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
 
-export default function ViewCart({ setItemsInCart, setTotalAmount }) {
+export default function ViewCart({ setItemsInCart, setOrderSummary }) {
   const [isUpdated, setIsUpdated] = useState(false);
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
@@ -15,7 +15,8 @@ export default function ViewCart({ setItemsInCart, setTotalAmount }) {
     const itemsAddedInCartString = localStorage.getItem('itemsInCart');
     const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
       ? JSON.parse(itemsAddedInCartString)
-      : null;
+      : [];
+    console.log('itemAddedInCart', itemsAddedInCart);
     setItemsInCart(itemsAddedInCart);
   }, [isUpdated]);
 
@@ -23,7 +24,9 @@ export default function ViewCart({ setItemsInCart, setTotalAmount }) {
     navigate('/guest-checkout');
   }
 
-  const isEmptyCart = itemsInCart.length === 0 ? true : false;
+  const isEmptyCart = itemsInCart.length === 0;
+
+  // console.log('itemsInCart',itemsInCart)
 
   return (
     <div className="max-w-5xl">
@@ -37,8 +40,9 @@ export default function ViewCart({ setItemsInCart, setTotalAmount }) {
           setIsUpdated={setIsUpdated}
         />
       ))}
-      {isEmptyCart && <p>There are no items added to the cart.</p>}
-      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} setTotalAmount={setTotalAmount} />}
+
+      {isEmptyCart && <p className='py-10 bg-slate-50'>There are no items added to the cart.</p>}
+      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} setOrderSummary={setOrderSummary} />}
       {!isEmptyCart && (
         <YellowButton content="Checkout" handleClick={handleCheckout} />
       )}

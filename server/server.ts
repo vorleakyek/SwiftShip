@@ -29,10 +29,6 @@ app.use(express.static(reactStaticDir));
 app.use(express.static(uploadsStaticDir));
 app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
-});
-
 type Item = {
   itemID: number;
   name: string;
@@ -93,6 +89,16 @@ app.get('/api/products/:productId', async (req, res, next) => {
   }
 });
 
+type OrderSummary = {
+  totalItems:number;
+  price: number;
+  tax: number;
+  shippingCost:number;
+  totalAmount:number;
+  earlyDeliveryDate: string;
+  lateDeliveryDate: string;
+}
+
 type Shipping = {
   orderID: number;
   address: string;
@@ -104,7 +110,7 @@ type Shipping = {
   zipCode: string;
   email: string;
   card: number;
-  totalAmount:number;
+  orderSummary: OrderSummary;
 };
 
 app.get('/api/guest-checkout/shipping', async (req, res, next) => {
@@ -282,16 +288,16 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
   try {
     const {
       orderID,
-      totalAmount,
+      orderSummary,
     } = req.body as Partial<Shipping>;
 
     const timeStamp = Date.now();
-    const randomNumbers = Math.floor(Math.random()*1000000);
+    const randomNumbers = Math.floor(Math.random() * 1000000);
     const orderNumber = `${timeStamp}${randomNumbers}`;
 
     if (
       !orderID ||
-      !totalAmount
+      !orderSummary
     ) {
       throw new Error('All fields are required.');
     }
@@ -303,9 +309,9 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
       RETURNING *
     `;
     const params = [
-      totalAmount,
+      orderSummary.totalAmount,
       orderNumber,
-      orderID,
+      orderID
     ];
 
     console.log(params);
@@ -322,26 +328,28 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
 app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
   try {
     const orderID = Number(req.params.orderID);
-    if(!Number.isInteger(orderID)) {
+    if (!Number.isInteger(orderID)) {
       throw new ClientError(400, 'entryId must be an integer');
     }
 
     const sql = `
       delete from "guestOrders"
         where "orderID" = $1
-        return *;
+        returning *;
     `
-    const params=[orderID];
-    const result=await db.query(sql,params);
-    const [deleted] = result.rows;
-      if (!deleted) {
-        throw new ClientError(404, `OrderID ${entryId} is not found`);
-      }
+    const params = [orderID];
+    const result = await db.query(sql, params);
+    if (result.rows.length === 0) {
+      throw new ClientError(404, `OrderID ${orderID} is not found`);
+    }
+
+    const deleted = result.rows[0];
     res.sendStatus(204);
 
-  }catch(err) {
+  } catch (err) {
     next(err)
-  } })
+  }
+})
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.
