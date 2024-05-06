@@ -6,8 +6,8 @@ import YellowButton from '../components/YellowButton';
 // import { IoIosArrowBack } from 'react-icons/io';
 import { getShippingInformation } from '../data';
 
-export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, setOrderSummary }) {
-  const { itemsInCart } = useContext(AppContext);
+export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
+  const { itemsInCart, orderID, orderSummary } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [guestInfo, setGuestInfo] = useState({
@@ -20,12 +20,12 @@ export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, se
   });
 
   const [earlyArrivalDate, setEarlyArrivalDate] = useState('');
-  const [lateDeliveryDate, setLateDeliveryDate] =useState('')
+  const [lateDeliveryDate, setLateDeliveryDate] = useState('');
 
   const { firstName, lastName, address, city, zipCode, selectedState } =
     guestInfo;
 
-  const {totalItems, totalAmount, price, shippingCost, tax} = orderSummary;
+  const { totalItems, totalAmount, price, shippingCost, tax } = orderSummary;
 
   useEffect(() => {
     const storedItemsInCart = JSON.parse(localStorage.getItem('itemsInCart')!);
@@ -64,7 +64,11 @@ export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, se
   async function handlePlaceOrder() {
     //update the orderNumber, totalAmount, orderDate
     try {
-      setOrderSummary((prev)=>({...prev, earlyDeliveryDate: earlyArrivalDate,lateDeliveryDate}))
+      setOrderSummary((prev) => ({
+        ...prev,
+        earlyDeliveryDate: earlyArrivalDate,
+        lateDeliveryDate,
+      }));
       const req = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -87,21 +91,21 @@ export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, se
 
   async function handleCancelOrder() {
     //delete info from the database
-    try{
+    try {
       const url = `api/guest-checkout/order/${orderID}`;
       const req = {
-        method:'DELETE',
+        method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       };
 
-      const res = await fetch(url,req);
+      const res = await fetch(url, req);
       if (!res.ok) {
         alert('error');
         throw new Error(`fetch Error ${res.status}`);
       }
-    }catch(err){
+    } catch (err) {
       alert(`Error registering user: ${err}`);
     }
     navigate('/');
@@ -164,18 +168,11 @@ export default function CheckoutPage({ setItemsInCart, orderID, orderSummary, se
       </div>
 
       <div>
-        <YellowButton
-          content="Cancel"
-          handleClick={handleCancelOrder}
-        />
-        <YellowButton
-          content="Place Order"
-          handleClick={handlePlaceOrder}
-        />
+        <YellowButton content="Cancel" handleClick={handleCancelOrder} />
+        <YellowButton content="Place Order" handleClick={handlePlaceOrder} />
       </div>
     </div>
   );
 }
-
 
 //Should remove the items in carts and updat the state properly

@@ -41,8 +41,12 @@ export default function ViewCart({ setItemsInCart, setOrderSummary }) {
         />
       ))}
 
-      {isEmptyCart && <p className='py-10 bg-slate-50'>There are no items added to the cart.</p>}
-      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} setOrderSummary={setOrderSummary} />}
+      {isEmptyCart && (
+        <p className="py-10 bg-slate-50">
+          There are no items added to the cart.
+        </p>
+      )}
+      {!isEmptyCart && <OrderSummary setOrderSummary={setOrderSummary} />}
       {!isEmptyCart && (
         <YellowButton content="Checkout" handleClick={handleCheckout} />
       )}

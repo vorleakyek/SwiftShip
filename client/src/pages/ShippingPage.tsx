@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect, useContext } from 'react';
 import { states, getShippingInformation } from '../data';
+import { AppContext } from '../components/AppContext';
 
-export default function ShippingPage({ orderID, setOrderID }) {
+export default function ShippingPage({ setOrderID }) {
+  const { orderID } = useContext(AppContext);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -54,8 +56,6 @@ export default function ShippingPage({ orderID, setOrderID }) {
 
     orderID && getInfo();
   }, []);
-
-
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>

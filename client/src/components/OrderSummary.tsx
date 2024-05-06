@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
-import { ItemInCart } from '../pages/ItemPage';
+import { useEffect, useContext } from 'react';
+import { type OrderSummary } from '../components/AppContext';
+import { AppContext } from '../components/AppContext';
 
 interface ItemsInCartProps {
-  itemsInCart: ItemInCart[];
-  setOrderSummary: any;
+  setOrderSummary: React.Dispatch<React.SetStateAction<OrderSummary>>;
 }
 
-export default function OrderSummary({ itemsInCart, setOrderSummary }: ItemsInCartProps) {
-
+export default function OrderSummary({ setOrderSummary }: ItemsInCartProps) {
+  const { itemsInCart } = useContext(AppContext);
   let price = 0;
   let totalItems = 0;
 
@@ -20,24 +20,24 @@ export default function OrderSummary({ itemsInCart, setOrderSummary }: ItemsInCa
   const shippingCost = price >= 35 ? 0 : 8.99;
   const totalAmount = price + tax + shippingCost;
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setOrderSummary({
       totalItems,
-      price: price.toFixed(2),
-      tax: tax.toFixed(2),
+      price: Number(price.toFixed(2)),
+      tax: Number(tax.toFixed(2)),
       shippingCost,
-      totalAmount
+      totalAmount: Number(totalAmount.toFixed(2)),
+      earlyDeliveryDate: '',
+      lateDeliveryDate: '',
     });
-  },[]);
-
+  }, []);
 
   return (
     <div className="flex pt-3">
       <div className="text-left">
         <h3 className="pl-3 font-semibold pb-2">Order Summary</h3>
         <div className="pl-10 text-sm">
-          <p className="pb-1">Items: {totalItems}</p>
+          <p className="pb-1">Items: {totalItems.toFixed(2)}</p>
           <p className="pb-1">Price: ${price.toFixed(2)}</p>
           <p className="pb-1">Tax: ${tax.toFixed(2)}</p>
           <p className="pb-1">

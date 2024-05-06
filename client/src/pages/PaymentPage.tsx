@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useState, useEffect, useContext } from 'react';
 import { getShippingInformation } from '../data';
+import { AppContext } from '../components/AppContext';
 
 type Shipping = {
   address: string;
@@ -12,7 +13,8 @@ type Shipping = {
   zipCode: string;
 };
 
-export default function PaymentPage({ orderID }) {
+export default function PaymentPage() {
+  const { orderID } = useContext(AppContext);
   const navigate = useNavigate();
   const [card, setCard] = useState('');
   const [email, setEmail] = useState('');
@@ -86,8 +88,7 @@ export default function PaymentPage({ orderID }) {
 
       navigate('/check-out');
     }
-    }
-
+  }
 
   return (
     <div className="max-w-5xl text-left mt-2">

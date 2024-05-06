@@ -1,5 +1,4 @@
 import YellowButton from '../components/YellowButton';
-import ReactDOMServer from 'react-dom/server';
 import { useNavigate } from 'react-router-dom';
 import OrderConfirmationContent from '../components/OrderConfirmationContent';
 // import { useEffect,useContext } from 'react';
@@ -8,7 +7,6 @@ import OrderConfirmationContent from '../components/OrderConfirmationContent';
 
 export default function OrderConfirmationPage() {
   const navigate = useNavigate();
-
 
   // function handlePrint() {
   //   // Open a new window
