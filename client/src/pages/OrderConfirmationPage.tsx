@@ -1,37 +1,32 @@
 import YellowButton from '../components/YellowButton';
 import { useNavigate } from 'react-router-dom';
 import OrderConfirmationContent from '../components/OrderConfirmationContent';
-// import { useEffect,useContext } from 'react';
-// import { AppContext } from '../components/AppContext';
-// import { getShippingInformation } from '../data';
 
-export default function OrderConfirmationPage() {
+export default function OrderConfirmationPage({
+  setItemsInCart,
+  setOrderSummary,
+}) {
   const navigate = useNavigate();
 
-  // function handlePrint() {
-  //   // Open a new window
-  //   const printWindow = window.open('', '_blank');
+  function handleClick() {
+    localStorage.setItem('itemsInCart', JSON.stringify([]));
+    setItemsInCart([]);
+    setOrderSummary({
+      totalItems: 0,
+      price: 0,
+      tax: 0,
+      shippingCost: 0,
+      totalAmount: 0,
+      earlyDeliveryDate: '',
+      lateDeliveryDate: '',
+    });
+    navigate('/');
+  }
 
-  //   const content = (
-  //     <div>
-  //       <OrderConfirmationContent />
-  //     </div>
-  //   );
-
-  //   // Convert JSX element to string
-  //   const contentString = ReactDOMServer.renderToString(content);
-
-  //   // Write content to the new window
-  //   printWindow?.document.write(contentString);
-
-  //   // Focus the new window
-  //   printWindow?.focus();
-  // }
   return (
     <div>
       <OrderConfirmationContent />
-      {/* <YellowButton content="Print" handleClick={handlePrint} /> */}
-      <YellowButton content="Back to HOME" handleClick={() => navigate('/')} />
+      <YellowButton content="Back to HOME" handleClick={handleClick} />
     </div>
   );
 }

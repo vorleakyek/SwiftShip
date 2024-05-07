@@ -1,20 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import ItemAdded from '../components/ItemAddedModal';
-import { getLocalStorageItems } from '../data';
+import { getLocalStorageItems, calculateOrderSummary } from '../data';
+import { AppContext } from '../components/AppContext';
 
 export type ItemInCart = Item & {
   itemQuantity: number;
 };
 
-export const ItemPage = ({ setItemsInCart }) => {
+export const ItemPage = ({ setItemsInCart, setOrderSummary }) => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
   const [showAddedItem, setShowAddedItem] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const { itemsInCart } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -27,6 +29,11 @@ export const ItemPage = ({ setItemsInCart }) => {
     }
     if (itemID) fetchItem(+itemID);
   }, [itemID]);
+
+  useEffect(() => {
+    const updateOrderSummary = calculateOrderSummary(itemsInCart);
+    setOrderSummary(updateOrderSummary);
+  }, [itemsInCart]);
 
   if (!item) return null;
   const { name, imageUrl, description, percentOff, originalPrice, salePrice } =

@@ -5,6 +5,7 @@ import { type ItemInCart } from './ItemPage.tsx';
 import OrderSummary from '../components/OrderSummary.tsx';
 import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { calculateOrderSummary } from '../data.tsx';
 
 export default function ViewCart({ setItemsInCart, setOrderSummary }) {
   const [isUpdated, setIsUpdated] = useState(false);
@@ -19,6 +20,11 @@ export default function ViewCart({ setItemsInCart, setOrderSummary }) {
     console.log('itemAddedInCart', itemsAddedInCart);
     setItemsInCart(itemsAddedInCart);
   }, [isUpdated]);
+
+  useEffect(() => {
+    const updateOrderSummary = calculateOrderSummary(itemsInCart);
+    setOrderSummary(updateOrderSummary);
+  }, [itemsInCart]);
 
   function handleCheckout() {
     navigate('/guest-checkout');
@@ -36,8 +42,8 @@ export default function ViewCart({ setItemsInCart, setOrderSummary }) {
         <CartItem
           item={item}
           key={item.itemID}
-          itemsInCart={itemsInCart}
           setIsUpdated={setIsUpdated}
+          setOrderSummary={setOrderSummary}
         />
       ))}
 

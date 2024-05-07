@@ -83,6 +83,18 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
       }
       const paymentInfo = await res.json();
       console.log('shipping info', paymentInfo);
+
+      localStorage.setItem('itemsInCart', JSON.stringify([]));
+      setItemsInCart([]);
+      // setOrderSummary({
+      //   totalItems: 0,
+      //   price: 0,
+      //   tax: 0,
+      //   shippingCost: 0,
+      //   totalAmount: 0,
+      //   earlyDeliveryDate: '',
+      //   lateDeliveryDate: '',
+      // })
     } catch (err) {
       alert(`Error registering user: ${err}`);
     }

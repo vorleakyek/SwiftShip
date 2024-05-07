@@ -17,7 +17,7 @@ import './App.css';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
-  const [orderID, setOrderID] = useState(0);
+  const [orderID, setOrderID] = useState(3);
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
     price: 0,
@@ -41,7 +41,12 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route
             path="products/:itemID"
-            element={<ItemPage setItemsInCart={setItemsInCart} />}
+            element={
+              <ItemPage
+                setItemsInCart={setItemsInCart}
+                setOrderSummary={setOrderSummary}
+              />
+            }
           />
           <Route
             path="view-cart"
@@ -69,7 +74,12 @@ export default function App() {
           />
           <Route
             path="order-confirmation"
-            element={<OrderConfirmationPage />}
+            element={
+              <OrderConfirmationPage
+                setItemsInCart={setItemsInCart}
+                setOrderSummary={setOrderSummary}
+              />
+            }
           />
         </Route>
       </Routes>

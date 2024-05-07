@@ -1,6 +1,7 @@
 import { useEffect, useContext } from 'react';
 import { type OrderSummary } from '../components/AppContext';
 import { AppContext } from '../components/AppContext';
+import { calculateOrderSummary } from '../data';
 
 interface ItemsInCartProps {
   setOrderSummary: React.Dispatch<React.SetStateAction<OrderSummary>>;
@@ -8,17 +9,8 @@ interface ItemsInCartProps {
 
 export default function OrderSummary({ setOrderSummary }: ItemsInCartProps) {
   const { itemsInCart } = useContext(AppContext);
-  let price = 0;
-  let totalItems = 0;
-
-  itemsInCart.map((itemInCart) => {
-    price = price + itemInCart.itemQuantity * itemInCart.salePrice;
-    totalItems = totalItems + itemInCart.itemQuantity;
-  });
-
-  const tax = price * 0.1;
-  const shippingCost = price >= 35 ? 0 : 8.99;
-  const totalAmount = price + tax + shippingCost;
+  const { totalItems, price, tax, shippingCost, totalAmount } =
+    calculateOrderSummary(itemsInCart);
 
   useEffect(() => {
     setOrderSummary({
@@ -37,7 +29,7 @@ export default function OrderSummary({ setOrderSummary }: ItemsInCartProps) {
       <div className="text-left">
         <h3 className="pl-3 font-semibold pb-2">Order Summary</h3>
         <div className="pl-10 text-sm">
-          <p className="pb-1">Items: {totalItems.toFixed(2)}</p>
+          <p className="pb-1">Items: {totalItems}</p>
           <p className="pb-1">Price: ${price.toFixed(2)}</p>
           <p className="pb-1">Tax: ${tax.toFixed(2)}</p>
           <p className="pb-1">
