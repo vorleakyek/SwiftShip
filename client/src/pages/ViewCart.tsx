@@ -5,8 +5,9 @@ import { type ItemInCart } from './ItemPage.tsx';
 import OrderSummary from '../components/OrderSummary.tsx';
 import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { calculateOrderSummary } from '../data.tsx';
 
-export default function ViewCart({ setItemsInCart }) {
+export default function ViewCart({ setItemsInCart, setOrderSummary }) {
   const [isUpdated, setIsUpdated] = useState(false);
   const { itemsInCart } = useContext(AppContext);
   const navigate = useNavigate();
@@ -15,15 +16,23 @@ export default function ViewCart({ setItemsInCart }) {
     const itemsAddedInCartString = localStorage.getItem('itemsInCart');
     const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
       ? JSON.parse(itemsAddedInCartString)
-      : null;
+      : [];
+    console.log('itemAddedInCart', itemsAddedInCart);
     setItemsInCart(itemsAddedInCart);
   }, [isUpdated]);
+
+  useEffect(() => {
+    const updateOrderSummary = calculateOrderSummary(itemsInCart);
+    setOrderSummary(updateOrderSummary);
+  }, [itemsInCart]);
 
   function handleCheckout() {
     navigate('/guest-checkout');
   }
 
-  const isEmptyCart = itemsInCart.length === 0 ? true : false;
+  const isEmptyCart = itemsInCart.length === 0;
+
+  // console.log('itemsInCart',itemsInCart)
 
   return (
     <div className="max-w-5xl">
@@ -33,12 +42,17 @@ export default function ViewCart({ setItemsInCart }) {
         <CartItem
           item={item}
           key={item.itemID}
-          itemsInCart={itemsInCart}
           setIsUpdated={setIsUpdated}
+          setOrderSummary={setOrderSummary}
         />
       ))}
-      {isEmptyCart && <p>There are no items added to the cart.</p>}
-      {!isEmptyCart && <OrderSummary itemsInCart={itemsInCart} />}
+
+      {isEmptyCart && (
+        <p className="py-10 bg-slate-50">
+          There are no items added to the cart.
+        </p>
+      )}
+      {!isEmptyCart && <OrderSummary setOrderSummary={setOrderSummary} />}
       {!isEmptyCart && (
         <YellowButton content="Checkout" handleClick={handleCheckout} />
       )}

@@ -1,4 +1,4 @@
-import { ItemInCart } from './pages/ItemPage';
+import { type ItemInCart } from './pages/ItemPage';
 
 export type Item = {
   itemID: number;
@@ -92,6 +92,28 @@ export async function getShippingInformation(orderID: number) {
   console.log(shippingInfo.orderID);
   // setOrderID(shippingInfo.orderID);
   return shippingInfo;
+}
+
+export function calculateOrderSummary(itemsInCart: ItemInCart[]) {
+  let price = 0;
+  let totalItems = 0;
+
+  itemsInCart.map((itemInCart) => {
+    price = price + itemInCart.itemQuantity * itemInCart.salePrice;
+    totalItems = totalItems + itemInCart.itemQuantity;
+  });
+
+  const tax = price * 0.1;
+  const shippingCost = price >= 35 ? 0 : 8.99;
+  const totalAmount = price + tax + shippingCost;
+
+  return {
+    totalItems,
+    price: Number(price.toFixed(2)),
+    tax: Number(tax.toFixed(2)),
+    shippingCost,
+    totalAmount: Number(totalAmount.toFixed(2)),
+  };
 }
 
 // export const products: Item[] = [

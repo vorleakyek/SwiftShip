@@ -1,4 +1,4 @@
-import OrderSummary from '../components/OrderSummary';
+// import OrderSummary from '../components/OrderSummary';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../components/AppContext';
 import { useContext, useEffect, useState } from 'react';
@@ -6,8 +6,8 @@ import YellowButton from '../components/YellowButton';
 // import { IoIosArrowBack } from 'react-icons/io';
 import { getShippingInformation } from '../data';
 
-export default function CheckoutPage({ setItemsInCart, orderID }) {
-  const { itemsInCart } = useContext(AppContext);
+export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
+  const { itemsInCart, orderID, orderSummary } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [guestInfo, setGuestInfo] = useState({
@@ -19,8 +19,13 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
     zipCode: '',
   });
 
+  const [earlyArrivalDate, setEarlyArrivalDate] = useState('');
+  const [lateDeliveryDate, setLateDeliveryDate] = useState('');
+
   const { firstName, lastName, address, city, zipCode, selectedState } =
     guestInfo;
+
+  const { totalItems, totalAmount, price, shippingCost, tax } = orderSummary;
 
   useEffect(() => {
     const storedItemsInCart = JSON.parse(localStorage.getItem('itemsInCart')!);
@@ -40,6 +45,15 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
         });
     }
     getInfo();
+
+    const currentDate = new Date();
+    const earlyArrival = new Date(
+      currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
+    ); // 7 days from now
+    const delivery = new Date(currentDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days from now
+
+    setEarlyArrivalDate(formatDate(earlyArrival));
+    setLateDeliveryDate(formatDate(delivery));
   }, []);
 
   function formatDate(date) {
@@ -47,11 +61,67 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
     return date.toLocaleDateString('en-US', options);
   }
 
-  const currentDate = new Date();
-  const earlyArrival = new Date(
-    currentDate.getTime() + 7 * 24 * 60 * 60 * 1000
-  ); // 7 days from now
-  const delivery = new Date(currentDate.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days from now
+  async function handlePlaceOrder() {
+    //update the orderNumber, totalAmount, orderDate
+    try {
+      setOrderSummary((prev) => ({
+        ...prev,
+        earlyDeliveryDate: earlyArrivalDate,
+        lateDeliveryDate,
+      }));
+      const req = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderID, orderSummary }),
+      };
+
+      console.log('update req', req);
+      const res = await fetch('api/guest-checkout/order', req);
+      if (!res.ok) {
+        alert('error');
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const paymentInfo = await res.json();
+      console.log('shipping info', paymentInfo);
+
+      localStorage.setItem('itemsInCart', JSON.stringify([]));
+      setItemsInCart([]);
+      // setOrderSummary({
+      //   totalItems: 0,
+      //   price: 0,
+      //   tax: 0,
+      //   shippingCost: 0,
+      //   totalAmount: 0,
+      //   earlyDeliveryDate: '',
+      //   lateDeliveryDate: '',
+      // })
+    } catch (err) {
+      alert(`Error registering user: ${err}`);
+    }
+    navigate('/order-confirmation');
+  }
+
+  async function handleCancelOrder() {
+    //delete info from the database
+    try {
+      const url = `api/guest-checkout/order/${orderID}`;
+      const req = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const res = await fetch(url, req);
+      if (!res.ok) {
+        alert('error');
+        throw new Error(`fetch Error ${res.status}`);
+      }
+    } catch (err) {
+      alert(`Error registering user: ${err}`);
+    }
+    navigate('/');
+  }
 
   return (
     <div className="max-w-5xl">
@@ -76,28 +146,45 @@ export default function CheckoutPage({ setItemsInCart, orderID }) {
         </div>
         <div className="text-left text-sm pl-10">
           <p className="pb-1">
-            Arriving {formatDate(earlyArrival)} - {formatDate(delivery)}
+            Arriving {earlyArrivalDate} - {lateDeliveryDate}
           </p>
           <p className="pb-1">
             Name: {firstName} {lastName}
           </p>
-          <p className="flex pb-1 mb-3">
-            <span className="inline m-0">Address: </span>{' '}
+          <div className="flex pb-1 mb-3">
+            <span className="inline m-0">Address: </span>
             <div className="inline-block ml-1">
-              {address},{' '}
+              {address},
               <span className="m-0">
                 {city}, {selectedState} {zipCode}
               </span>
-            </div>{' '}
-          </p>
+            </div>
+          </div>
         </div>
       </div>
       <hr />
-      <OrderSummary itemsInCart={itemsInCart} />
-      <YellowButton
-        content="Place Order"
-        handleClick={() => navigate('/order-confirmation')}
-      />
+
+      <div className="flex pt-3">
+        <div className="text-left">
+          <h3 className="pl-3 font-semibold pb-2">Order Summary</h3>
+          <div className="pl-10 text-sm">
+            <p className="pb-1">Items: {totalItems}</p>
+            <p className="pb-1">Price: ${price}</p>
+            <p className="pb-1">Tax: ${tax}</p>
+            <p className="pb-1">
+              Shipping: {shippingCost === 0 ? 'Free' : '$8.99'}
+            </p>
+            <p className="pb-1">Total: ${totalAmount.toFixed(2)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <YellowButton content="Cancel" handleClick={handleCancelOrder} />
+        <YellowButton content="Place Order" handleClick={handlePlaceOrder} />
+      </div>
     </div>
   );
 }
+
+//Should remove the items in carts and updat the state properly

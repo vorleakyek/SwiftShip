@@ -47,7 +47,8 @@ CREATE TABLE "categories" (
 
 CREATE TABLE orders (
   orderID SERIAL PRIMARY KEY,
-  userID INT, -- Foreign key referencing users.userID
+  userID INT, -- Foreign key referencing users.userID,
+  orderNumber INT,
   orderDate TIMESTAMP,
   totalAmount DECIMAL(10, 2)
   -- Other order-related fields
@@ -55,15 +56,17 @@ CREATE TABLE orders (
 
 CREATE TABLE "guestOrders" (
   "orderID" SERIAL PRIMARY KEY,
-  "guestEmail" VARCHAR(50),
   "guestFirstName" VARCHAR(50),
   "guestLastName" VARCHAR(50),
+  "guestEmail" VARCHAR(50),
   "guestAddress" VARCHAR(100),
   "guestCity" VARCHAR(50),
   "guestState" VARCHAR(50),
   "guestZipCode" VARCHAR(50),
   "guestPhoneNumber" VARCHAR(50),
-  "orderDate" TIMESTAMP,
-  "totalAmount" DECIMAL(10, 2)
+  "guestCard" VARCHAR(50),
+  "totalAmount" DECIMAL(10, 2),
+  "orderNumber" VARCHAR(50),
+  "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
   -- Other order-related fields
 );

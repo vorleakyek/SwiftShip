@@ -1,21 +1,19 @@
 import { BsTrash } from 'react-icons/bs';
 import { HiMiniMinusSmall, HiPlusSmall } from 'react-icons/hi2';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { type ItemInCart } from '../pages/ItemPage';
 import { updateLocalStorageItemQuantity } from '../data';
+import { type OrderSummary, AppContext } from './AppContext';
 
 interface CartItemProps {
   item: ItemInCart;
-  itemsInCart: ItemInCart[];
   setIsUpdated: (boolean) => void;
+  setOrderSummary: React.Dispatch<React.SetStateAction<OrderSummary>>;
 }
 
-export default function CartItem({
-  item,
-  itemsInCart,
-  setIsUpdated,
-}: CartItemProps) {
+export default function CartItem({ item, setIsUpdated }: CartItemProps) {
   const [quantity, setQuantity] = useState(item.itemQuantity);
+  const { itemsInCart } = useContext(AppContext);
 
   useEffect(() => {
     updateLocalStorageItemQuantity(item, itemsInCart, quantity);
@@ -34,6 +32,7 @@ export default function CartItem({
     const updatedItemsInCart = itemsInCart.filter(
       (itemInCart) => itemInCart.itemID !== removeItem.itemID
     );
+
     localStorage.setItem('itemsInCart', JSON.stringify(updatedItemsInCart));
     setIsUpdated((prev) => !prev);
   }

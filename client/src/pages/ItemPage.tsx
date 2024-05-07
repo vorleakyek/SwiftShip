@@ -1,25 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getItem, type Item } from '../data';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack } from 'react-icons/io';
 import ItemAdded from '../components/ItemAddedModal';
-import { getLocalStorageItems } from '../data';
-// import { AppContext } from "../components/AppContext";
+import { getLocalStorageItems, calculateOrderSummary } from '../data';
+import { AppContext } from '../components/AppContext';
 
 export type ItemInCart = Item & {
   itemQuantity: number;
 };
 
-export const ItemPage = ({ setItemsInCart }) => {
+export const ItemPage = ({ setItemsInCart, setOrderSummary }) => {
   const { itemID } = useParams();
   const [item, setItem] = useState<Item>();
   const [showAddedItem, setShowAddedItem] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
-
-  // const { itemsInCart } = useContext(AppContext);
-
-  // const navigate = useNavigate();
+  const { itemsInCart } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchItem(itemID: number) {
@@ -33,17 +30,17 @@ export const ItemPage = ({ setItemsInCart }) => {
     if (itemID) fetchItem(+itemID);
   }, [itemID]);
 
+  useEffect(() => {
+    const updateOrderSummary = calculateOrderSummary(itemsInCart);
+    setOrderSummary(updateOrderSummary);
+  }, [itemsInCart]);
+
   if (!item) return null;
   const { name, imageUrl, description, percentOff, originalPrice, salePrice } =
     item;
 
   function handleAddToCartClick(item: Item, quantity: number) {
     setShowAddedItem(true);
-    //check if "itemQuanity exist in the localstorage"
-    // const itemsAddedInCartString = localStorage.getItem('itemsInCart');
-    // const itemsAddedInCart: ItemInCart[] = itemsAddedInCartString
-    //   ? JSON.parse(itemsAddedInCartString)
-    //   : null;
 
     const itemsAddedInCart = getLocalStorageItems();
 
@@ -52,13 +49,9 @@ export const ItemPage = ({ setItemsInCart }) => {
       const addedItem: ItemInCart = { ...item, itemQuantity: quantity };
       addedItems.push(addedItem);
       localStorage.setItem('itemsInCart', JSON.stringify(addedItems));
-      setItemsInCart(addedItem);
+      setItemsInCart([addedItem]);
     } else {
-      //updating the quantity of an existing added item
-      // itemsAddedInCart.map((itemAdded)=> itemAdded.itemID === item.itemID ? itemAdded['itemQuantity'] = quantity : itemAdded);
-
       let isFound = false;
-
       itemsAddedInCart.map((itemAdded) => {
         if (itemAdded.itemID === item.itemID) {
           itemAdded['itemQuantity'] = quantity;

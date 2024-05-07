@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useState, useEffect, useContext } from 'react';
 import { getShippingInformation } from '../data';
+import { AppContext } from '../components/AppContext';
 
 type Shipping = {
   address: string;
@@ -12,7 +13,8 @@ type Shipping = {
   zipCode: string;
 };
 
-export default function PaymentPage({ orderID }) {
+export default function PaymentPage() {
+  const { orderID } = useContext(AppContext);
   const navigate = useNavigate();
   const [card, setCard] = useState('');
   const [email, setEmail] = useState('');
@@ -57,13 +59,33 @@ export default function PaymentPage({ orderID }) {
     getInfo();
   }, []);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!card || !email) {
       setIsError(true);
     } else {
       setIsError(false);
+
+      try {
+        const req = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderID, card, email }),
+        };
+
+        console.log('update req', req);
+        const res = await fetch('api/guest-checkout/payment', req);
+        if (!res.ok) {
+          alert('error');
+          throw new Error(`fetch Error ${res.status}`);
+        }
+        const paymentInfo = await res.json();
+        console.log('shipping info', paymentInfo);
+      } catch (err) {
+        alert(`Error registering user: ${err}`);
+      }
+
       navigate('/check-out');
     }
   }
@@ -135,7 +157,7 @@ export default function PaymentPage({ orderID }) {
                 <p>
                   Name: {firstName} {lastName}
                 </p>
-                <p className="flex">
+                <div className="flex">
                   <span className="inline m-0">Address: </span>{' '}
                   <div className="inline-block ml-1">
                     {address},{' '}
@@ -143,7 +165,7 @@ export default function PaymentPage({ orderID }) {
                       {city}, {selectedState} {zipCode}
                     </span>
                   </div>{' '}
-                </p>
+                </div>
                 <p>Phone: {phoneNumber}</p>
               </div>
             </div>

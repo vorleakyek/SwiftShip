@@ -1,21 +1,28 @@
-import { ItemInCart } from '../pages/ItemPage';
+import { useEffect, useContext } from 'react';
+import { type OrderSummary } from '../components/AppContext';
+import { AppContext } from '../components/AppContext';
+import { calculateOrderSummary } from '../data';
 
 interface ItemsInCartProps {
-  itemsInCart: ItemInCart[];
+  setOrderSummary: React.Dispatch<React.SetStateAction<OrderSummary>>;
 }
 
-export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
-  let price = 0;
-  let totalItems = 0;
+export default function OrderSummary({ setOrderSummary }: ItemsInCartProps) {
+  const { itemsInCart } = useContext(AppContext);
+  const { totalItems, price, tax, shippingCost, totalAmount } =
+    calculateOrderSummary(itemsInCart);
 
-  itemsInCart.map((itemInCart) => {
-    price = price + itemInCart.itemQuantity * itemInCart.salePrice;
-    totalItems = totalItems + itemInCart.itemQuantity;
-  });
-  const tax = price * 0.1;
-  const total = price + tax;
-
-  const shippingCost = price >= 35 ? 0 : 8.99;
+  useEffect(() => {
+    setOrderSummary({
+      totalItems,
+      price: Number(price.toFixed(2)),
+      tax: Number(tax.toFixed(2)),
+      shippingCost,
+      totalAmount: Number(totalAmount.toFixed(2)),
+      earlyDeliveryDate: '',
+      lateDeliveryDate: '',
+    });
+  }, []);
 
   return (
     <div className="flex pt-3">
@@ -28,7 +35,7 @@ export default function OrderSummary({ itemsInCart }: ItemsInCartProps) {
           <p className="pb-1">
             Shipping: {shippingCost === 0 ? 'Free' : '$8.99'}
           </p>
-          <p className="pb-1">Total: ${total.toFixed(2)}</p>
+          <p className="pb-1">Total: ${totalAmount.toFixed(2)}</p>
         </div>
       </div>
     </div>
