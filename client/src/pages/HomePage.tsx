@@ -23,6 +23,10 @@ export default function HomePage() {
     setIsHidden(true);
   }
 
+  function handleChatBot() {
+    console.log('chatbot');
+  }
+
   return (
     <div className="max-w-5xl my-auto relative">
       {products && <Carousel data={products} />}
@@ -66,7 +70,9 @@ export default function HomePage() {
             </button>
           </div>
           <div>
-            <button className="bg-cyan-600 text-white font-bold px-10 py-1 rounded-lg ">
+            <button
+              className="bg-cyan-600 text-white font-bold px-10 py-1 rounded-lg"
+              onClick={handleChatBot}>
               Chat
             </button>
           </div>
