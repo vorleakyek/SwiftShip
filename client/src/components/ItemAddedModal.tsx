@@ -20,7 +20,9 @@ export default function ItemAdded({ item, quantity, handleCloseButton }) {
             <img src={item.imageUrl} alt={item.name} />
           </div>
           <div className="basis-1/2 pt-5 px-3">
-            <p className=" text-xl font-semibold mb-5">{item.name}</p>
+            <p className=" text-xs md:text-lg font-semibold mb-5">
+              {item.name}
+            </p>
             <p className="text-base text-slate-500">Quantity: {quantity}</p>
           </div>
         </div>

@@ -71,6 +71,29 @@ export const ItemPage = ({ setItemsInCart, setOrderSummary }) => {
     }
   }
 
+  const salePriceJSX = (
+    <div className="flex items-center justify-center">
+      <div>
+        <p className="text-red-600 font-semibold pr-5">-{percentOff}%</p>
+      </div>
+      <div>
+        <p className="text-slate-700">Now ${salePrice}</p>
+        <p className="text-xs text-slate-600">
+          Was
+          <span className="line-through text-xs inline">${originalPrice}</span>
+        </p>
+      </div>
+    </div>
+  );
+
+  const regularPriceJSX = (
+    <div className="mt-2">
+      <p>
+        Price: <span className="font-bold inline">${originalPrice}</span>{' '}
+      </p>
+    </div>
+  );
+
   return (
     <div className="max-w-5xl my-5 relative ">
       <Link to={`/`}>
@@ -82,20 +105,7 @@ export const ItemPage = ({ setItemsInCart, setOrderSummary }) => {
       <h1 className="font-medium py-5">{name}</h1>
       <div className="max-w-72 mx-auto">
         <img src={imageUrl} alt={name} />
-        <div className="flex items-center justify-center">
-          <div>
-            <p className="text-red-600 font-semibold pr-5">-{percentOff}%</p>
-          </div>
-          <div>
-            <p className="text-slate-700">Now ${salePrice}</p>
-            <p className="text-xs text-slate-600">
-              Was
-              <span className="line-through text-xs inline">
-                ${originalPrice}
-              </span>
-            </p>
-          </div>
-        </div>
+        {item.currentlyOnSale ? salePriceJSX : regularPriceJSX}
       </div>
       <div className="pt-5">
         <p className="text-left">
