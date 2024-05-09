@@ -5,9 +5,16 @@ import { SaleItem } from '../components/SaleItem';
 import { getProducts, type Item } from '../data';
 import { FaAngleUp } from 'react-icons/fa6';
 
+import Chatbot from 'react-chatbot-kit';
+import 'react-chatbot-kit/build/main.css';
+import config from '../bot/config';
+import MessageParser from '../bot/MessageParser';
+import ActionProvider from '../bot/ActionProvider';
+
 export default function HomePage() {
   const [products, setProducts] = useState<Item[]>();
   const [isHidden, setIsHidden] = useState(false);
+  const [openChatBot, setOpenChatBot] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -24,8 +31,31 @@ export default function HomePage() {
   }
 
   function handleChatBot() {
+    setIsHidden(true);
+    setOpenChatBot(true);
     console.log('chatbot');
   }
+
+  const displayChatBot = openChatBot ? (
+    <div className="relative">
+      <Chatbot
+        config={config}
+        messageParser={MessageParser}
+        actionProvider={ActionProvider}
+      />
+      <div className="absolute top-2 right-5 bg-red-600 px-3 text-white font-semibold rounded-md">
+        <button onClick={() => setOpenChatBot(false)}>End</button>
+      </div>
+    </div>
+  ) : (
+    <div>
+      <button
+        className="bg-cyan-600 text-white font-bold px-10 py-1 rounded-lg"
+        onClick={handleChatBot}>
+        Chat
+      </button>
+    </div>
+  );
 
   return (
     <div className="max-w-5xl my-auto relative">
@@ -69,13 +99,7 @@ export default function HomePage() {
               X
             </button>
           </div>
-          <div>
-            <button
-              className="bg-cyan-600 text-white font-bold px-10 py-1 rounded-lg"
-              onClick={handleChatBot}>
-              Chat
-            </button>
-          </div>
+          {displayChatBot}
         </div>
       </div>
     </div>
