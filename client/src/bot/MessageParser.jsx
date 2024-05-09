@@ -1,10 +1,18 @@
-// in MessageParser.js
+// in MessageParser.jsx
 import React from 'react';
 
 const MessageParser = ({ children, actions }) => {
   const parse = (message) => {
-    if (message.includes('hello')) {
+    if (message.includes('hello') || message.includes('hi')) {
       actions.handleHello();
+    }
+
+    if (message.includes('dog')) {
+      actions.handleDog();
+    }
+
+    if (message.includes('bye')) {
+      actions.handleBye();
     }
   };
 
