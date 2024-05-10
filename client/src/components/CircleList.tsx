@@ -9,7 +9,7 @@ const CircleList: React.FC<CircleClickProps> = ({
   onCircleClick,
   currentImgIndex,
 }: CircleClickProps) => {
-  const array = [0, 1, 2];
+  const array = [0, 1, 2, 3, 4];
   const circles = array.map((index) => (
     <li key={index}>
       <span
