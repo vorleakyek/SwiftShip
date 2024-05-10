@@ -25,7 +25,7 @@ VALUES (3, 'Leslie', 'Hurray', 'leslie.hurray@gmail.com','31276 Rosella Views','
 INSERT INTO "categories" ("categoryID", "categoryName") VALUES
 (1, 'Books'),
 (2, 'Clothes'),
-(3, 'Pet supplies'),
+(3, 'PetSupplies'),
 (4, 'Kitchens'),
 (5, 'Toys'),
 (6, 'Games');

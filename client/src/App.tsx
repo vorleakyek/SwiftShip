@@ -14,10 +14,13 @@ import PaymentPage from './pages/PaymentPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import './index.css';
 import './App.css';
+import BookPage from './pages/BookPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
-  const [orderID, setOrderID] = useState(3);
+  const [orderID, setOrderID] = useState();
+  const [category, setCategory] = useState<string>('');
+
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
     price: 0,
@@ -37,8 +40,17 @@ export default function App() {
   return (
     <AppContext.Provider value={contextValue}>
       <Routes>
-        <Route path="/" element={<NavBar />}>
+        <Route path="/" element={<NavBar setCategory={setCategory} />}>
           <Route index element={<HomePage />} />
+          <Route path="Books" element={<BookPage category={category} />} />
+          <Route path="Clothes" element={<BookPage category={category} />} />
+          <Route
+            path="PetSupplies"
+            element={<BookPage category={category} />}
+          />
+          <Route path="Kitchens" element={<BookPage category={category} />} />
+          <Route path="Toys" element={<BookPage category={category} />} />
+          <Route path="Games" element={<BookPage category={category} />} />
           <Route
             path="products/:itemID"
             element={
