@@ -39,7 +39,7 @@ export default function HomePage() {
   const displayChatBot = openChatBot ? (
     <div className="relative">
       <Chatbot
-        config={config}
+        config={config as any}
         messageParser={MessageParser}
         actionProvider={ActionProvider}
       />
@@ -57,17 +57,36 @@ export default function HomePage() {
     </div>
   );
 
+  const randomProductsList = (products: Item[]) => {
+    const array: Item[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      const randomNumber = Math.floor(
+        Math.random() * (products.length - 1) + 1
+      );
+      array.push(products[randomNumber]);
+    }
+    console.log(array);
+    return array;
+  };
+
+  function handleBackToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
+
   return (
     <div className="max-w-5xl my-auto relative">
-      {products && <Carousel data={products} />}
+      {products && <Carousel data={randomProductsList(products)} />}
       <hr className="max-w-5xl" />
       <div>
         <p className="text-left font-medium py-3">Deals for you</p>
         <div className="flex flex-row flex-wrap items-center">
-          {products?.map(
-            (item) =>
-              item.currentlyOnSale && <SaleItem data={item} key={item.itemID} />
-          )}
+          {products?.map((item) => (
+            <SaleItem data={item} key={item.itemID} />
+          ))}
         </div>
       </div>
       <hr className="max-w-5xl" />
@@ -76,19 +95,16 @@ export default function HomePage() {
           Inspired by your shopping trends
         </p>
         <div className="flex flex-row flex-wrap items-center">
-          {products?.map(
-            (item) =>
-              !item.currentlyOnSale && (
-                <RegularItem key={item.itemID} data={item} />
-              )
-          )}
+          {products?.map((item) => (
+            <RegularItem key={item.itemID} data={item} />
+          ))}
         </div>
       </div>
       <div className="bg-neutral-300 p-2">
-        <p>
+        <button onClick={handleBackToTop}>
           <FaAngleUp className="inline" />
           <span className="inline">Back to top</span>
-        </p>
+        </button>
       </div>
       <div className="fixed bottom-5 right-3">
         <div>
