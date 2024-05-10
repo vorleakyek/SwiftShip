@@ -84,9 +84,10 @@ export default function HomePage() {
       <div>
         <p className="text-left font-medium py-3">Deals for you</p>
         <div className="flex flex-row flex-wrap items-center">
-          {products?.map((item) => (
-            <SaleItem data={item} key={item.itemID} />
-          ))}
+          {products?.map(
+            (item) =>
+              item.currentlyOnSale && <SaleItem data={item} key={item.itemID} />
+          )}
         </div>
       </div>
       <hr className="max-w-5xl" />
@@ -95,9 +96,12 @@ export default function HomePage() {
           Inspired by your shopping trends
         </p>
         <div className="flex flex-row flex-wrap items-center">
-          {products?.map((item) => (
-            <RegularItem key={item.itemID} data={item} />
-          ))}
+          {products?.map(
+            (item) =>
+              !item.currentlyOnSale && (
+                <RegularItem key={item.itemID} data={item} />
+              )
+          )}
         </div>
       </div>
       <div className="bg-neutral-300 p-2">
