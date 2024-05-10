@@ -60,32 +60,95 @@ app.get('/api/products', async (req, res, next) => {
   }
 });
 
-app.get('/api/products/:category', async (req, res, next) => {
+app.get('/api/productsIn/:category', async (req, res, next) => {
   try {
-    const category = req.params.category;
-    if (!category) {
-      throw new ClientError(400, 'missing category as a parameter');
+    const text = req.params.category;
+    if (!text) {
+      throw new ClientError(400, 'productId must be a positive integer');
     }
 
     const sql = `
-      select *
-      from "products"
-      join "categories" using ("categoryID")
-      where "categoryName" = $1
+      SELECT *
+      FROM "products"
+      JOIN "categories" USING ("categoryID")
+      WHERE "categoryName" = $1
     `;
 
-    const params = [category];
+    const params = [text];
     const result = await db.query<Item>(sql, params);
 
-    if (result.rows.length > 0) {
-      res.status(201).json(result.rows);
-    } else {
-      res.status(404).json({ message: 'No products found!' });
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the itemId ${text}`);
     }
+
+    res.json(result.rows);
   } catch (err) {
     next(err);
   }
 });
+
+// app.get('/api/productsIn/:category', async (req, res, next) => {
+//   try {
+//     const category = req.params.category;
+//     if (!category) {
+//       throw new ClientError(400, 'missing category as a parameter');
+//     }
+
+//     const sql = `
+//       select *
+//       from "products"
+//       join "categories" using ("categoryID")
+//       where "categoryName" = '${category}'
+//     `;
+
+//     const result = await db.query<Item>(sql);
+
+//     if (result.rows.length > 0) {
+//       res.status(201).json(result.rows);
+//     } else {
+//       res.status(404).json({ message: 'No products found!' });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+// app.get('/api/productsIn/:category', async (req, res, next) => {
+//   try {
+//     const category = req.params.category;
+//     if (!category) {
+//       throw new ClientError(400, 'missing category as a parameter');
+//     }
+
+// const sql = `
+//   SELECT *
+//   FROM "products"
+//   JOIN "categories" USING ("categoryID")
+//   WHERE "categoryName" = '${category}'
+// `;
+
+//     // const params = [`${category}`];
+//     const result = await db.query<Item>(sql);
+
+//     // if (result.rows.length > 0) {
+//     //   res.status(200).json(result.rows);
+//     // } else {
+//     //   res.status(404).json({ message: 'No products found!' });
+//     // }
+
+//     if (!result.rows[0]) {
+//       throw new ClientError(
+//         404,
+//         `cannot find products`
+//       );
+//     }
+
+//     res.json(result.rows[0]);
+
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 app.get('/api/products/:productId', async (req, res, next) => {
   try {
@@ -99,7 +162,6 @@ app.get('/api/products/:productId', async (req, res, next) => {
       from "products"
       where "itemID" = $1
     `;
-    console.log('product id', productId);
 
     const params = [productId];
     const result = await db.query<Item>(sql, params);
