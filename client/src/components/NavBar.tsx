@@ -5,7 +5,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AppContext } from './AppContext';
 
-export default function NavBar({ setCategory }) {
+export default function NavBar({ setCategory, setSearchKeyWords }) {
   const navigate = useNavigate();
   const { orderSummary } = useContext(AppContext);
 
@@ -30,7 +30,7 @@ export default function NavBar({ setCategory }) {
             </button>
           </div>
         </div>
-        <Search />
+        <Search setSearchKeyWords={setSearchKeyWords} />
         <CatalogListing setCategory={setCategory} />
       </div>
       <Outlet />

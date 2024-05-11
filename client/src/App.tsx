@@ -15,11 +15,13 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import './index.css';
 import './App.css';
 import BookPage from './pages/BookPage';
+import SearchResultPage from './pages/SearchResultPage';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
-  const [orderID, setOrderID] = useState();
+  const [orderID, setOrderID] = useState(0);
   const [category, setCategory] = useState<string>('');
+  const [searchKeyWords, setSearchKeyWords] = useState('Books');
 
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
@@ -40,7 +42,14 @@ export default function App() {
   return (
     <AppContext.Provider value={contextValue}>
       <Routes>
-        <Route path="/" element={<NavBar setCategory={setCategory} />}>
+        <Route
+          path="/"
+          element={
+            <NavBar
+              setCategory={setCategory}
+              setSearchKeyWords={setSearchKeyWords}
+            />
+          }>
           <Route index element={<HomePage />} />
           <Route path="Books" element={<BookPage category={category} />} />
           <Route path="Clothes" element={<BookPage category={category} />} />
@@ -59,6 +68,10 @@ export default function App() {
                 setOrderSummary={setOrderSummary}
               />
             }
+          />
+          <Route
+            path="search-result"
+            element={<SearchResultPage searchKeyWords={searchKeyWords} />}
           />
           <Route
             path="view-cart"

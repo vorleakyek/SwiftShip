@@ -8,6 +8,30 @@ import {
   errorMiddleware,
 } from './lib/index.js';
 
+type OrderSummary = {
+  totalItems: number;
+  price: number;
+  tax: number;
+  shippingCost: number;
+  totalAmount: number;
+  earlyDeliveryDate: string;
+  lateDeliveryDate: string;
+};
+
+type Shipping = {
+  orderID: number;
+  address: string;
+  city: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  selectedState: string;
+  zipCode: string;
+  email: string;
+  card: number;
+  orderSummary: OrderSummary;
+};
+
 const connectionString =
   process.env.DATABASE_URL ||
   `postgresql://${process.env.RDS_USERNAME}:${process.env.RDS_PASSWORD}@${process.env.RDS_HOSTNAME}:${process.env.RDS_PORT}/${process.env.RDS_DB_NAME}`;
@@ -87,69 +111,6 @@ app.get('/api/productsIn/:category', async (req, res, next) => {
   }
 });
 
-// app.get('/api/productsIn/:category', async (req, res, next) => {
-//   try {
-//     const category = req.params.category;
-//     if (!category) {
-//       throw new ClientError(400, 'missing category as a parameter');
-//     }
-
-//     const sql = `
-//       select *
-//       from "products"
-//       join "categories" using ("categoryID")
-//       where "categoryName" = '${category}'
-//     `;
-
-//     const result = await db.query<Item>(sql);
-
-//     if (result.rows.length > 0) {
-//       res.status(201).json(result.rows);
-//     } else {
-//       res.status(404).json({ message: 'No products found!' });
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
-
-// app.get('/api/productsIn/:category', async (req, res, next) => {
-//   try {
-//     const category = req.params.category;
-//     if (!category) {
-//       throw new ClientError(400, 'missing category as a parameter');
-//     }
-
-// const sql = `
-//   SELECT *
-//   FROM "products"
-//   JOIN "categories" USING ("categoryID")
-//   WHERE "categoryName" = '${category}'
-// `;
-
-//     // const params = [`${category}`];
-//     const result = await db.query<Item>(sql);
-
-//     // if (result.rows.length > 0) {
-//     //   res.status(200).json(result.rows);
-//     // } else {
-//     //   res.status(404).json({ message: 'No products found!' });
-//     // }
-
-//     if (!result.rows[0]) {
-//       throw new ClientError(
-//         404,
-//         `cannot find products`
-//       );
-//     }
-
-//     res.json(result.rows[0]);
-
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
 app.get('/api/products/:productId', async (req, res, next) => {
   try {
     const productId = Number(req.params.productId);
@@ -179,29 +140,36 @@ app.get('/api/products/:productId', async (req, res, next) => {
   }
 });
 
-type OrderSummary = {
-  totalItems: number;
-  price: number;
-  tax: number;
-  shippingCost: number;
-  totalAmount: number;
-  earlyDeliveryDate: string;
-  lateDeliveryDate: string;
-};
+app.get('/api/products/search/:keywords', async (req, res, next) => {
+  try {
+    const keyWords = req.params.keywords;
+    if (!keyWords) {
+      throw new ClientError(400, 'productId must be a positive integer');
+    }
 
-type Shipping = {
-  orderID: number;
-  address: string;
-  city: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  selectedState: string;
-  zipCode: string;
-  email: string;
-  card: number;
-  orderSummary: OrderSummary;
-};
+    const searchString = `%${keyWords}%`;
+    const sql = `
+      SELECT *
+      FROM "products"
+      JOIN "categories" USING ("categoryID")
+      WHERE "categoryName" ILIKE $1 OR "name" ILIKE $1 OR "description" ILIKE $1
+    `;
+
+    const params = [searchString];
+    const result = await db.query<Item>(sql, params);
+
+    if (!result.rows[0]) {
+      throw new ClientError(
+        404,
+        `cannot find product with the itemId ${keyWords}`
+      );
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get('/api/guest-checkout/shipping', async (req, res, next) => {
   try {
