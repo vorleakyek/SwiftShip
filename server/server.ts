@@ -60,6 +60,96 @@ app.get('/api/products', async (req, res, next) => {
   }
 });
 
+app.get('/api/productsIn/:category', async (req, res, next) => {
+  try {
+    const text = req.params.category;
+    if (!text) {
+      throw new ClientError(400, 'productId must be a positive integer');
+    }
+
+    const sql = `
+      SELECT *
+      FROM "products"
+      JOIN "categories" USING ("categoryID")
+      WHERE "categoryName" = $1
+    `;
+
+    const params = [text];
+    const result = await db.query<Item>(sql, params);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the itemId ${text}`);
+    }
+
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// app.get('/api/productsIn/:category', async (req, res, next) => {
+//   try {
+//     const category = req.params.category;
+//     if (!category) {
+//       throw new ClientError(400, 'missing category as a parameter');
+//     }
+
+//     const sql = `
+//       select *
+//       from "products"
+//       join "categories" using ("categoryID")
+//       where "categoryName" = '${category}'
+//     `;
+
+//     const result = await db.query<Item>(sql);
+
+//     if (result.rows.length > 0) {
+//       res.status(201).json(result.rows);
+//     } else {
+//       res.status(404).json({ message: 'No products found!' });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+// app.get('/api/productsIn/:category', async (req, res, next) => {
+//   try {
+//     const category = req.params.category;
+//     if (!category) {
+//       throw new ClientError(400, 'missing category as a parameter');
+//     }
+
+// const sql = `
+//   SELECT *
+//   FROM "products"
+//   JOIN "categories" USING ("categoryID")
+//   WHERE "categoryName" = '${category}'
+// `;
+
+//     // const params = [`${category}`];
+//     const result = await db.query<Item>(sql);
+
+//     // if (result.rows.length > 0) {
+//     //   res.status(200).json(result.rows);
+//     // } else {
+//     //   res.status(404).json({ message: 'No products found!' });
+//     // }
+
+//     if (!result.rows[0]) {
+//       throw new ClientError(
+//         404,
+//         `cannot find products`
+//       );
+//     }
+
+//     res.json(result.rows[0]);
+
+//   } catch (err) {
+//     next(err);
+//   }
+// });
+
 app.get('/api/products/:productId', async (req, res, next) => {
   try {
     const productId = Number(req.params.productId);
@@ -90,14 +180,14 @@ app.get('/api/products/:productId', async (req, res, next) => {
 });
 
 type OrderSummary = {
-  totalItems:number;
+  totalItems: number;
   price: number;
   tax: number;
-  shippingCost:number;
-  totalAmount:number;
+  shippingCost: number;
+  totalAmount: number;
   earlyDeliveryDate: string;
   lateDeliveryDate: string;
-}
+};
 
 type Shipping = {
   orderID: number;
@@ -244,20 +334,11 @@ app.put('/api/guest-checkout/shipping', async (req, res, next) => {
   }
 });
 
-
 app.put('/api/guest-checkout/payment', async (req, res, next) => {
   try {
-    const {
-      orderID,
-      card,
-      email
-    } = req.body as Partial<Shipping>;
+    const { orderID, card, email } = req.body as Partial<Shipping>;
 
-    if (
-      !orderID ||
-      !card ||
-      !email
-    ) {
+    if (!orderID || !card || !email) {
       throw new Error('All fields are required.');
     }
     const sql = `
@@ -267,11 +348,7 @@ app.put('/api/guest-checkout/payment', async (req, res, next) => {
       WHERE "orderID" = $3
       RETURNING *
     `;
-    const params = [
-      email,
-      card,
-      orderID,
-    ];
+    const params = [email, card, orderID];
 
     console.log(params);
     const result = await db.query(sql, params);
@@ -283,22 +360,15 @@ app.put('/api/guest-checkout/payment', async (req, res, next) => {
   }
 });
 
-
 app.put('/api/guest-checkout/order', async (req, res, next) => {
   try {
-    const {
-      orderID,
-      orderSummary,
-    } = req.body as Partial<Shipping>;
+    const { orderID, orderSummary } = req.body as Partial<Shipping>;
 
     const timeStamp = Date.now();
     const randomNumbers = Math.floor(Math.random() * 1000000);
     const orderNumber = `${timeStamp}${randomNumbers}`;
 
-    if (
-      !orderID ||
-      !orderSummary
-    ) {
+    if (!orderID || !orderSummary) {
       throw new Error('All fields are required.');
     }
     const sql = `
@@ -308,11 +378,7 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
       WHERE "orderID" = $3
       RETURNING *
     `;
-    const params = [
-      orderSummary.totalAmount,
-      orderNumber,
-      orderID
-    ];
+    const params = [orderSummary.totalAmount, orderNumber, orderID];
 
     console.log(params);
     const result = await db.query(sql, params);
@@ -323,7 +389,6 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
     console.log('error occur in the /api/guest-checkout/payment route', err);
   }
 });
-
 
 app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
   try {
@@ -336,7 +401,7 @@ app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
       delete from "guestOrders"
         where "orderID" = $1
         returning *;
-    `
+    `;
     const params = [orderID];
     const result = await db.query(sql, params);
     if (result.rows.length === 0) {
@@ -345,11 +410,10 @@ app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
 
     const deleted = result.rows[0];
     res.sendStatus(204);
-
   } catch (err) {
-    next(err)
+    next(err);
   }
-})
+});
 /*
  * Middleware that handles paths that aren't handled by static middleware
  * or API route handlers.

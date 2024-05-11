@@ -1,8 +1,10 @@
-export default function CatalogListing() {
+import { Link } from 'react-router-dom';
+
+export default function CatalogListing({ setCategory }) {
   const arrayList = [
-    'Book',
+    'Books',
     'Clothes',
-    'Pets supplies',
+    'PetSupplies',
     'Kitchens',
     'Toys',
     'Games',
@@ -11,7 +13,11 @@ export default function CatalogListing() {
     <div className="w-11/12 m-auto">
       <ul className="text-neutral-100 flex justify-around pt-2">
         {arrayList.map((item) => (
-          <li key={item}>{item}</li>
+          <li key={item}>
+            <Link onClick={() => setCategory(item)} to={`/${item}`}>
+              {item === 'PetSupplies' ? 'Pet Supplies' : item}{' '}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>
