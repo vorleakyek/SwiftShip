@@ -52,7 +52,21 @@ export async function getSpecificProducts(category: string): Promise<Item[]> {
       'content-Type': 'application/json',
     },
   };
+
   const res = await fetch(`api/productsIn/${category}`, req);
+  if (!res.ok) throw new Error(`fetch Error ${res.status}`);
+  return await res.json();
+}
+
+export async function getSearchProducts(keywords: string): Promise<Item[]> {
+  const req = {
+    method: 'GET',
+    headers: {
+      'content-Type': 'application/json',
+    },
+  };
+
+  const res = await fetch(`api/products/search/${keywords}`, req);
   if (!res.ok) throw new Error(`fetch Error ${res.status}`);
   return await res.json();
 }

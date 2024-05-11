@@ -24,7 +24,7 @@ export default function BookPage({ category }: { category: string }) {
         {category === 'PetSupplies' ? 'Pet Supplies' : category}
       </h1>
       {dataArray.map((item) => (
-        <ItemRow item={item} />
+        <ItemRow key={item.itemID} item={item} />
       ))}
     </div>
   );
