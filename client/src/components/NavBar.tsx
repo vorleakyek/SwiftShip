@@ -17,7 +17,7 @@ export default function NavBar({ setCategory, setSearchKeyWords }) {
             <h1 className="text-lg text-neutral-100">SwiftShip</h1>
           </Link>
           <div className="flex flex-row">
-            <p className="text-base text-neutral-100 mr-2">Sign in</p>
+            <Link to={'/guest-checkout'} className="text-base text-neutral-100 mr-2">Sign in</Link>
             <button className="relative" onClick={() => navigate('/view-cart')}>
               <FaCartShopping className="mt-1 text-2xl text-rose-200" />
               {orderSummary.totalItems !== 0 && (

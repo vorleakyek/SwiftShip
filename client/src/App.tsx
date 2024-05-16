@@ -24,6 +24,8 @@ export default function App() {
   const [orderID, setOrderID] = useState(0);
   const [category, setCategory] = useState<string>('');
   const [searchKeyWords, setSearchKeyWords] = useState('Books');
+  const [showGuestCheckOut, setShowGuestCheckOut] = useState(false);
+
 
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
@@ -83,10 +85,11 @@ export default function App() {
               <ViewCart
                 setItemsInCart={setItemsInCart}
                 setOrderSummary={setOrderSummary}
+                setShowGuestCheckOut={setShowGuestCheckOut}
               />
             }
           />
-          <Route path="guest-checkout" element={<GuestCheckoutPage />} />
+          <Route path="guest-checkout" element={<GuestCheckoutPage showGuestCheckOut={showGuestCheckOut} setShowGuestCheckOut={setShowGuestCheckOut} />} />
           <Route
             path="shipping"
             element={<ShippingPage setOrderID={setOrderID} />}

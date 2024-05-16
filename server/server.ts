@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Remove when used */
 import 'dotenv/config';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import express from 'express';
 import pg from 'pg';
 import {
@@ -123,7 +124,40 @@ app.post('/api/auth/registration', async (req, res, next) => {
     console.log(response);
     res.status(201).json(response);
   } catch (err) {
-    console.log('error occur in the /api/guest-checkout/shipping route', err);
+    console.log('error occur in registration form', err);
+  }
+});
+
+app.post('/api/auth/sign-in', async (req, res, next) => {
+  try {
+    const { email: emailRaw, password } = req.body;
+    const email = emailRaw?.toLowerCase();
+    if (!email || !password) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const sql = `
+      select "userId",
+            "hashedPassword"
+        from "users"
+        where "email" = $1
+      `;
+    const params = [email];
+    const result = await db.query(sql, params);
+    const [user] = result.rows;
+    if (!user) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const { userId, hashedPassword } = user;
+    const isMatching = await argon2.verify(hashedPassword, password);
+    if (!isMatching) {
+      throw new ClientError(401, 'invalid login');
+    }
+    const payload = { userId, email };
+    const token = jwt.sign(payload, hashKey);
+    res.json({ token, user: payload });
+  } catch (err) {
+    res.json('invalid login');
+    next(err);
   }
 });
 

@@ -1,30 +1,69 @@
 import YellowButton from '../components/YellowButton';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
-export default function GuestCheckoutPage() {
+export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheckOut}) {
   const [isHidden, setIsHidden] = useState(true);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
 
   const navigate = useNavigate();
-  return (
-    <div className="my-5 max-w-5xl border p-8 border-slate-400">
-      <button
-        className="px-10 py-1 rounded-md border border-slate-500"
-        onClick={() => {
-          navigate('/shipping');
-        }}>
-        Continue as Guest
-      </button>
 
-      <div className="flex items-center justify-center mt-3">
-        <div className="basis-1/2 border-b-2"></div>
-        <div className="mx-3">or</div>
-        <div className="basis-1/2 border-b-2"></div>
-      </div>
+  useEffect(() => {
+      setShowGuestCheckOut(showGuestCheckOut)
+    return()=>{
+      setShowGuestCheckOut(false);
+    }
+  },[]);
+
+  async function handleSignIn(event) {
+    event.preventDefault();
+
+    try {
+      const req = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      };
+      const res = await fetch('/api/auth/sign-in', req);
+      if (!res.ok) {
+        alert('error');
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const shippingInfo = await res.json();
+      // setOrderID(shippingInfo.orderID);
+
+      shippingInfo && navigate('/');
+    } catch (err) {
+      console.error(`Error registering user: ${err}`);
+    }
+  }
+
+  return (
+    <div className=" max-w-5xl border p-8 border-slate-400">
+      {showGuestCheckOut && (
+      <>
+          <button
+            className="px-10 py-1 rounded-md border border-slate-500"
+            onClick={() => {
+              navigate('/shipping');
+            }}>
+            Continue as Guest
+          </button>
+
+          <div className="flex items-center justify-center mt-3">
+            <div className="basis-1/2 border-b-2"></div>
+            <div className="mx-3">or</div>
+            <div className="basis-1/2 border-b-2"></div>
+          </div>
+      </>
+      )}
 
       <div className="my-5">
-        <form>
+        <form onSubmit={handleSignIn}>
           <div className="relative">
             <label
               htmlFor="email"
@@ -34,6 +73,7 @@ export default function GuestCheckoutPage() {
             <input
               type="email"
               id="email"
+              name="email"
               className="border border-slate-500 py-1 w-full bg-white px-2"
               required
             />
@@ -45,6 +85,7 @@ export default function GuestCheckoutPage() {
             <input
               type={isHidden ? 'password' : 'text'}
               id="password"
+              name="password"
               placeholder="Password"
               className="border border-slate-500 px-2 py-1 w-full"
               required
@@ -69,10 +110,9 @@ export default function GuestCheckoutPage() {
             </Link>
           </div>
 
-          <YellowButton
-            content="Sign In"
-            handleClick={() => console.log('click')}
-          />
+          <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
+              Sign In
+          </button>
         </form>
       </div>
     </div>
