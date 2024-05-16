@@ -16,6 +16,8 @@ import './index.css';
 import './App.css';
 import BookPage from './pages/BookPage';
 import SearchResultPage from './pages/SearchResultPage';
+import { RegistrationForm } from './pages/RegistrationForm';
+import CustomerService from './pages/CustomerService';
 
 export default function App() {
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
@@ -51,6 +53,8 @@ export default function App() {
             />
           }>
           <Route index element={<HomePage />} />
+          <Route path="sign-up" element={<RegistrationForm />} />
+          <Route path="customer-service" element={<CustomerService />} />
           <Route path="Books" element={<BookPage category={category} />} />
           <Route path="Clothes" element={<BookPage category={category} />} />
           <Route

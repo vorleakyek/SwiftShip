@@ -1,6 +1,6 @@
 import YellowButton from '../components/YellowButton';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function GuestCheckoutPage() {
@@ -63,7 +63,11 @@ export default function GuestCheckoutPage() {
             </div>
           </div>
 
-          <div className="text-right pt-2">Create Account</div>
+          <div className="text-right pt-2">
+            <Link className="text-sky-800 font-semibold" to={'/sign-up'}>
+              Create Account
+            </Link>
+          </div>
 
           <YellowButton
             content="Sign In"

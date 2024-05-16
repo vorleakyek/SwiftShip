@@ -35,9 +35,16 @@ CREATE TABLE "products" (
 
 CREATE TABLE "users" (
   "userID" serial PRIMARY KEY,
-  "fullName" varchar(50),
+  "firstName" varchar(50),
+  "lastName" varchar(50),
+  "address" varchar(100),
+  "city" VARCHAR(50),
+  "state" VARCHAR(50),
+  "zipCode" VARCHAR(50),
+  "phoneNumber" VARCHAR(50),
   "email" varchar(50) UNIQUE,
-  "address" varchar(100)
+  "hashedPassword" text,
+  "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
 
 CREATE TABLE "categories" (
