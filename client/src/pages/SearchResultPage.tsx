@@ -22,12 +22,18 @@ export default function SearchResultPage({
     fetchDataArray(searchKeyWords);
   }, [searchKeyWords]);
 
+  const displayResult = (result) => {
+    if (result.length === 0) {
+      return <div className="p-10 bg-blue-100 mt-3">No Result Found</div>;
+    } else {
+      return result.map((item) => <ItemRow key={item.itemID} item={item} />);
+    }
+  };
+
   return (
     <div className="max-w-5xl">
       <h1 className="font-bold font-xl text-left mt-3 ml-5">Search Result: </h1>
-      {result.map((item) => (
-        <ItemRow key={item.itemID} item={item} />
-      ))}
+      {displayResult(result)}
     </div>
   );
 }

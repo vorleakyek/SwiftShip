@@ -11,9 +11,9 @@
 --      ('Get a job', false);
 
 -- Inserting sample data into "users" table
-INSERT INTO "users" ("userID", "fullName", "email", "address") VALUES
-(1, 'Homer Simpson', 'homer@example.com', '123 Main St'),
-(2, 'Jane Smith', 'jane@example.com', '456 Elm St');
+-- INSERT INTO "users" ("userID", "fullName", "email", "address") VALUES
+-- (1, 'Homer Simpson', 'homer@example.com', '123 Main St'),
+-- (2, 'Jane Smith', 'jane@example.com', '456 Elm St');
 
 
 -- Inserting sample data into "guestOrders" table

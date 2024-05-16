@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Remove when used */
 import 'dotenv/config';
+import argon2 from 'argon2';
 import express from 'express';
 import pg from 'pg';
 import {
@@ -42,6 +43,9 @@ const db = new pg.Pool({
   },
 });
 
+const hashKey = process.env.TOKEN_SECRET;
+if (!hashKey) throw new Error('TOKEN_SECRET not found in .env');
+
 const app = express();
 
 // Create paths for static directories
@@ -64,6 +68,64 @@ type Item = {
   percentOff: number;
   currentlyOnSale: boolean;
 };
+
+app.post('/api/auth/registration', async (req, res, next) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password,
+      address,
+      city,
+      selectedState,
+      zipCode,
+    } = req.body;
+
+    if (
+      !address ||
+      !city ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !selectedState ||
+      !zipCode ||
+      !email ||
+      !password
+    ) {
+      throw new Error('All fields are required.');
+    }
+
+    const hashedPassword = await argon2.hash(password);
+
+    const sql = `
+      insert into "users" ("firstName","lastName", "address", "city", "state", "zipCode", "phoneNumber", "email","hashedPassword")
+      values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      returning *
+    `;
+
+    const params = [
+      firstName,
+      lastName,
+      address,
+      city,
+      selectedState,
+      zipCode,
+      phoneNumber,
+      email,
+      hashedPassword,
+    ];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log('error occur in the /api/guest-checkout/shipping route', err);
+  }
+});
 
 app.get('/api/products', async (req, res, next) => {
   try {
@@ -153,17 +215,11 @@ app.get('/api/products/search/:keywords', async (req, res, next) => {
       FROM "products"
       JOIN "categories" USING ("categoryID")
       WHERE "categoryName" ILIKE $1 OR "name" ILIKE $1 OR "description" ILIKE $1
+
     `;
 
     const params = [searchString];
     const result = await db.query<Item>(sql, params);
-
-    if (!result.rows[0]) {
-      throw new ClientError(
-        404,
-        `cannot find product with the itemId ${keyWords}`
-      );
-    }
 
     res.json(result.rows);
   } catch (err) {
