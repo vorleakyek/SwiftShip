@@ -7,7 +7,7 @@ import { AppContext } from './AppContext';
 
 export default function NavBar({ setCategory, setSearchKeyWords }) {
   const navigate = useNavigate();
-  const { orderSummary } = useContext(AppContext);
+  const { orderSummary, user, handleSignOut } = useContext(AppContext);
 
   return (
     <>
@@ -16,8 +16,26 @@ export default function NavBar({ setCategory, setSearchKeyWords }) {
           <Link to={`/`}>
             <h1 className="text-lg text-neutral-100">SwiftShip</h1>
           </Link>
-          <div className="flex flex-row">
-            <p className="text-base text-neutral-100 mr-2">Sign in</p>
+
+          <div className="flex flex-row text-neutral-100 ">
+            {!user && (
+              <Link to={'/guest-checkout'} className="text-base  mr-2">
+                Sign in
+              </Link>
+            )}
+            {user && (
+              <>
+                <div className="pr-1 ">
+                  <p>{user.email} |</p>
+                </div>
+                <Link
+                  to={'/'}
+                  onClick={handleSignOut}
+                  className="text-base  mr-2">
+                  Sign out
+                </Link>
+              </>
+            )}
             <button className="relative" onClick={() => navigate('/view-cart')}>
               <FaCartShopping className="mt-1 text-2xl text-rose-200" />
               {orderSummary.totalItems !== 0 && (
