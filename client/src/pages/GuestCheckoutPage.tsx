@@ -1,25 +1,40 @@
-import YellowButton from '../components/YellowButton';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { type ChangeEvent, useState, useEffect, useContext } from 'react';
+import { AppContext } from '../components/AppContext';
 
-export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheckOut}) {
+export default function GuestCheckoutPage({
+  showGuestCheckOut,
+  setShowGuestCheckOut,
+}) {
   const [isHidden, setIsHidden] = useState(true);
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
-  })
+    password: '',
+  });
+
+  const { handleSignIn } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-      setShowGuestCheckOut(showGuestCheckOut)
-    return()=>{
+    setShowGuestCheckOut(showGuestCheckOut);
+    return () => {
       setShowGuestCheckOut(false);
-    }
-  },[]);
+    };
+  }, []);
 
-  async function handleSignIn(event) {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
     try {
@@ -36,6 +51,9 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
       const shippingInfo = await res.json();
       // setOrderID(shippingInfo.orderID);
 
+      console.log('shippingInfo', shippingInfo);
+      handleSignIn(shippingInfo);
+
       shippingInfo && navigate('/');
     } catch (err) {
       console.error(`Error registering user: ${err}`);
@@ -45,7 +63,7 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
   return (
     <div className=" max-w-5xl border p-8 border-slate-400">
       {showGuestCheckOut && (
-      <>
+        <>
           <button
             className="px-10 py-1 rounded-md border border-slate-500"
             onClick={() => {
@@ -59,11 +77,11 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
             <div className="mx-3">or</div>
             <div className="basis-1/2 border-b-2"></div>
           </div>
-      </>
+        </>
       )}
 
       <div className="my-5">
-        <form onSubmit={handleSignIn}>
+        <form onSubmit={handleSubmit}>
           <div className="relative">
             <label
               htmlFor="email"
@@ -76,6 +94,8 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
               name="email"
               className="border border-slate-500 py-1 w-full bg-white px-2"
               required
+              value={formData.email}
+              onChange={handleChange}
             />
           </div>
           <div className="mt-5 relative">
@@ -86,6 +106,8 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
               type={isHidden ? 'password' : 'text'}
               id="password"
               name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="border border-slate-500 px-2 py-1 w-full"
               required
@@ -111,7 +133,7 @@ export default function GuestCheckoutPage({ showGuestCheckOut, setShowGuestCheck
           </div>
 
           <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
-              Sign In
+            Sign In
           </button>
         </form>
       </div>

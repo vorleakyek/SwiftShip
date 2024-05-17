@@ -9,24 +9,30 @@ export type OrderSummary = {
   totalAmount: number;
   earlyDeliveryDate: string;
   lateDeliveryDate: string;
-}
+};
 
 type AppContextValues = {
   itemsInCart: ItemInCart[];
   orderSummary: OrderSummary;
-  orderID:number;
+  orderID: number;
+  user: any;
+  handleSignIn: (auth) => void;
+  handleSignOut: () => void;
 };
 
 export const AppContext = createContext<AppContextValues>({
   itemsInCart: [],
-  orderSummary:{
-    totalItems:0,
+  orderSummary: {
+    totalItems: 0,
     price: 0,
     tax: 0,
     shippingCost: 0,
     totalAmount: 0,
     earlyDeliveryDate: '',
-    lateDeliveryDate: ''
+    lateDeliveryDate: '',
   },
-  orderID: 0
+  orderID: 0,
+  user: '',
+  handleSignIn: () => undefined,
+  handleSignOut: () => undefined,
 });

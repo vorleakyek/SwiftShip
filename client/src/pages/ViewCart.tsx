@@ -7,9 +7,13 @@ import { AppContext } from '../components/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { calculateOrderSummary } from '../data.tsx';
 
-export default function ViewCart({ setItemsInCart, setOrderSummary, setShowGuestCheckOut }) {
+export default function ViewCart({
+  setItemsInCart,
+  setOrderSummary,
+  setShowGuestCheckOut,
+}) {
   const [isUpdated, setIsUpdated] = useState(false);
-  const { itemsInCart } = useContext(AppContext);
+  const { itemsInCart, user } = useContext(AppContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +31,12 @@ export default function ViewCart({ setItemsInCart, setOrderSummary, setShowGuest
   }, [itemsInCart]);
 
   function handleCheckout() {
-    setShowGuestCheckOut(true);
-    navigate('/guest-checkout');
+    if (!user) {
+      setShowGuestCheckOut(true);
+      navigate('/guest-checkout');
+    } else {
+      navigate('/checkout');
+    }
   }
 
   const isEmptyCart = itemsInCart.length === 0;

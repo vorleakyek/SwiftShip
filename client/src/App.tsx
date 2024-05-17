@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
 import ViewCart from './pages/ViewCart';
 import CheckoutPage from './pages/CheckoutPage';
+import Checkout from './pages/Checkout';
 import { type OrderSummary, AppContext } from './components/AppContext';
 import { type ItemInCart } from './pages/ItemPage';
 import GuestCheckoutPage from './pages/GuestCheckoutPage';
@@ -20,12 +21,15 @@ import { RegistrationForm } from './pages/RegistrationForm';
 import CustomerService from './pages/CustomerService';
 
 export default function App() {
+  const [user, setUser] = useState();
+  const [token, setToken] = useState<string>();
+  const [isAuthorizing, setIsAuthorizing] = useState(true);
+
   const [itemsInCart, setItemsInCart] = useState<ItemInCart[]>([]);
   const [orderID, setOrderID] = useState(0);
   const [category, setCategory] = useState<string>('');
   const [searchKeyWords, setSearchKeyWords] = useState('Books');
   const [showGuestCheckOut, setShowGuestCheckOut] = useState(false);
-
 
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
@@ -41,7 +45,38 @@ export default function App() {
     itemsInCart,
     orderSummary,
     orderID,
+    handleSignIn,
+    handleSignOut,
+    user,
+    token,
   };
+
+  const tokenKey = 'swift-ship';
+
+  useEffect(() => {
+    // If user logged in previously on this browser, authorize them
+    const auth = localStorage.getItem(tokenKey);
+    if (auth) {
+      const a = JSON.parse(auth);
+      setUser(a.user);
+      setToken(a.token);
+    }
+    setIsAuthorizing(false);
+  }, []);
+
+  if (isAuthorizing) return null;
+
+  function handleSignIn(auth) {
+    localStorage.setItem(tokenKey, JSON.stringify(auth));
+    setUser(auth.user);
+    setToken(auth.token);
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem(tokenKey);
+    setUser(undefined);
+    setToken(undefined);
+  }
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -89,7 +124,16 @@ export default function App() {
               />
             }
           />
-          <Route path="guest-checkout" element={<GuestCheckoutPage showGuestCheckOut={showGuestCheckOut} setShowGuestCheckOut={setShowGuestCheckOut} />} />
+          <Route
+            path="guest-checkout"
+            element={
+              <GuestCheckoutPage
+                showGuestCheckOut={showGuestCheckOut}
+                setShowGuestCheckOut={setShowGuestCheckOut}
+              />
+            }
+          />
+          <Route path="checkout" element={<Checkout />} />
           <Route
             path="shipping"
             element={<ShippingPage setOrderID={setOrderID} />}
