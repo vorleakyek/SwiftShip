@@ -162,6 +162,32 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
   }
 });
 
+app.get('/api/login-user-checkout/info', async (req, res, next) => {
+  try {
+    const userID = Number(req.query.userID);
+    console.log(req.query);
+
+    const sql = `
+      select *
+      from "users"
+      where "userID" = $1
+    `;
+
+    const param = [userID];
+    const result = await db.query(sql, param);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the orderID`);
+    }
+
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log('cannot retrieved shipping info');
+  }
+});
+
 app.get('/api/products', async (req, res, next) => {
   try {
     const sql = `
