@@ -1,13 +1,13 @@
-// import OrderSummary from '../components/OrderSummary';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../components/AppContext';
 import { useContext, useEffect, useState } from 'react';
 import YellowButton from '../components/YellowButton';
-// import { IoIosArrowBack } from 'react-icons/io';
 import { getShippingInformation } from '../data';
+import { getUserInfo } from '../data';
 
 export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
-  const { itemsInCart, orderID, orderSummary } = useContext(AppContext);
+  const { user, card, itemsInCart, orderID, orderSummary } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const [guestInfo, setGuestInfo] = useState({
@@ -31,7 +31,7 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
     const storedItemsInCart = JSON.parse(localStorage.getItem('itemsInCart')!);
     setItemsInCart(storedItemsInCart);
 
-    async function getInfo() {
+    async function getGuessInfo() {
       const existing = await getShippingInformation(orderID);
 
       if (existing)
@@ -44,7 +44,26 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
           selectedState: existing.guestState,
         });
     }
-    getInfo();
+
+    async function getLoginUserInfo() {
+      const userInfo = await getUserInfo(user.userID);
+      const { firstName, lastName, address, city, zipCode, state } = userInfo;
+
+      setGuestInfo({
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        selectedState: state,
+        zipCode: zipCode,
+      });
+    }
+
+    if (!user) {
+      getGuessInfo();
+    } else {
+      getLoginUserInfo();
+    }
 
     const currentDate = new Date();
     const earlyArrival = new Date(
@@ -69,23 +88,42 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
         earlyDeliveryDate: earlyArrivalDate,
         lateDeliveryDate,
       }));
-      const req = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderID, orderSummary }),
-      };
 
-      console.log('update req', req);
-      const res = await fetch('api/guest-checkout/order', req);
-      if (!res.ok) {
-        alert('error');
-        throw new Error(`fetch Error ${res.status}`);
+      if (!user) {
+        const req = {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderID, orderSummary }),
+        };
+
+        console.log('update req', req);
+        const res = await fetch('api/guest-checkout/order', req);
+        if (!res.ok) {
+          alert('error');
+          throw new Error(`fetch Error ${res.status}`);
+        }
+        const paymentInfo = await res.json();
+        console.log('shipping info', paymentInfo);
+      } else {
+        const req = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderSummary, card, user }),
+        };
+
+        console.log('update req', req);
+        const res = await fetch('api/login-user-checkout/order', req);
+        if (!res.ok) {
+          alert('error');
+          throw new Error(`fetch Error ${res.status}`);
+        }
+        const paymentInfo = await res.json();
+        console.log('shipping info', paymentInfo);
       }
-      const paymentInfo = await res.json();
-      console.log('shipping info', paymentInfo);
     } catch (err) {
       alert(`Error registering user: ${err}`);
     }
+
     navigate('/order-confirmation');
   }
 
@@ -102,7 +140,7 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
 
       const res = await fetch(url, req);
       if (!res.ok) {
-        alert('error');
+        console.log(`fetch Error ${res.status}`);
         throw new Error(`fetch Error ${res.status}`);
       }
     } catch (err) {

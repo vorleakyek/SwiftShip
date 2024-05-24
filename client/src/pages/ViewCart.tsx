@@ -35,7 +35,7 @@ export default function ViewCart({
       setShowGuestCheckOut(true);
       navigate('/guest-checkout');
     } else {
-      navigate('/checkout');
+      navigate('/login-payment');
     }
   }
 

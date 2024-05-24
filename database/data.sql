@@ -1,21 +1,3 @@
--- Use SQL insert statements to add any
--- starting/dummy data to your database tables
-
--- EXAMPLE:
-
---  insert into "todos"
---    ("task", "isCompleted")
---    values
---      ('Learn to code', false),
---      ('Build projects', false),
---      ('Get a job', false);
-
--- Inserting sample data into "users" table
--- INSERT INTO "users" ("userID", "fullName", "email", "address") VALUES
--- (1, 'Homer Simpson', 'homer@example.com', '123 Main St'),
--- (2, 'Jane Smith', 'jane@example.com', '456 Elm St');
-
-
 -- Inserting sample data into "guestOrders" table
 INSERT INTO "guestOrders" ("orderID","guestFirstName","guestLastName", "guestEmail",  "guestAddress", "guestCity", "guestState","guestZipCode", "guestPhoneNumber",  "guestCard",  "totalAmount","orderNumber" ,"createdAt")
 VALUES (3, 'Leslie', 'Hurray', 'leslie.hurray@gmail.com','31276 Rosella Views','West Gracie', 'New York', '51346','(551)309-0352', '122334-4566-112', '10.25', '7ADJ651PL', '2024-03-30 03:26:40.076619+00'),
@@ -29,6 +11,10 @@ INSERT INTO "categories" ("categoryID", "categoryName") VALUES
 (4, 'Kitchens'),
 (5, 'Toys'),
 (6, 'Games');
+
+-- Inserting sample data into "users" table
+INSERT INTO "users" ("userID", "firstName", "lastName", "address", "city", "state", "zipCode", "phoneNumber","email","hashedPassword") values
+(105,'Homer','Simpon', '31276 Rosella Views','West Gracie', 'New York', 51346,'(551)309-0352','a@a.com','$argon2id$v=19$m=4096,t=3,p=1$2msHm/ACx2DoLkgmYpg4hg$Uprh2tWcr2qkoUyxBx03M36p4raqm/tqVhQoiT48TYo');
 
 -- Inserting sample data into "products" table
 INSERT INTO "products" ("itemID", "categoryID", "name", "description", "imageUrl", "originalPrice", "status", "salePrice", "percentOff", "currentlyOnSale")
@@ -51,17 +37,3 @@ VALUES
 (115,5,'Perfect Petzzz ® The Original Breathing Pet Cavalier King Charles New Huggable Soft Version Plush Toy Gift Bundle','Product Description: Cavalier King 100% synthetic realistic plush with breathing movement Perfect Petzzz Cavalier King Charles The Original Breathing Pet New Soft Hug Version Product Description: 100% synthetic Cavalier King realistic plush with breathing movement Batteries required: 1 x D (included) Minimum age: 3 years Dimensions: 23x19x10cm Package Content Regal: 1 dog adoption, brush, cloth bed','https://m.media-amazon.com/images/I/61CuXbtoODL._AC_SX679_.jpg',49.00,'available',49.00,0,false),
 (116,6,'Buffalo Games - Dowdle - Amish Country - 1000 Piece Jigsaw Puzzle for Adults Challenging Puzzle Perfect for Game Nights - Finished Size 26.75 x 19.75','This 1000-piece jigsaw puzzle titled “Amish Country” is based on the artwork of Eric Dowdle. This image showcases the current life of many Amish people still living in the Lancaster region of Pennsylvania. These tight-knit communities are known for their work ethic, hand-crafted wares, and simple, faithful lives. Enjoy piecing together this scene of barns, horse and buggies, and rolling hills of crops and livestock. Eric Dowdle was born the tenth of 12 children to a family of storytellers. He has traveled the world to discover fascinating people and places to include in his art. Each Dowdle puzzle has a colorful story to tell.','https://m.media-amazon.com/images/I/81lVe5AB5hL._AC_SX679_.jpg',14.99,'available',14.99,0,false),
 (117,6,'3 otters Mini Basketball Game, 29PCS Tabletop Game Set Desktop Toys Arcade Basketball Game or Kids Basketball Shooting Game, Sports Gifts for Boys 8-12','Engaging Tabletop Basketball Game - Our indoor tabletop basketball game is a thrilling basketball shooting game that promises endless fun. Simply place a ball on the launcher, press the spring, release it, and watch as the basketball bounces into the hoop.', 'https://m.media-amazon.com/images/I/71t+z-vV8JL._AC_SX679_.jpg',11.99,'available',11.99,0,false)
-
-
-
-
-
-
-
-
-
-
-
--- Inserting sample data into "orders" table
-
--- Inserting sample data into "order_items" table

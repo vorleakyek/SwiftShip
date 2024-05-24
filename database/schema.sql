@@ -6,20 +6,6 @@ drop schema "public" cascade;
 
 create schema "public";
 
-
--- CREATE TABLE "orders" (
---   "id" int PRIMARY KEY,
---   "user_id" int UNIQUE NOT NULL,
---   "status" varchar,
---   "created_at" varchar
--- );
-
--- CREATE TABLE "order_items" (
---   "order_id" int,
---   "product_id" int,
---   "quantity" int
--- );
-
 CREATE TABLE "products" (
   "itemID" int PRIMARY KEY,
   "categoryID" int,
@@ -52,13 +38,12 @@ CREATE TABLE "categories" (
   "categoryName" varchar
 );
 
-CREATE TABLE orders (
-  orderID SERIAL PRIMARY KEY,
-  userID INT, -- Foreign key referencing users.userID,
-  orderNumber INT,
-  orderDate TIMESTAMP,
-  totalAmount DECIMAL(10, 2)
-  -- Other order-related fields
+CREATE TABLE "orders" (
+  "orderNumber" varchar(50) PRIMARY KEY,
+  "userID" varchar(20),
+  "cardNumber" varchar(25),
+  "totalAmount" DECIMAL(10, 5),
+  "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
 
 CREATE TABLE "guestOrders" (
@@ -75,5 +60,4 @@ CREATE TABLE "guestOrders" (
   "totalAmount" DECIMAL(10, 2),
   "orderNumber" VARCHAR(50),
   "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
-  -- Other order-related fields
 );

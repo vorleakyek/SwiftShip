@@ -6,7 +6,7 @@ import HomePage from './pages/HomePage';
 import ItemPage from './pages/ItemPage';
 import ViewCart from './pages/ViewCart';
 import CheckoutPage from './pages/CheckoutPage';
-import Checkout from './pages/Checkout';
+import LoginUserPaymentPage from './pages/LoginUserPaymentPage';
 import { type OrderSummary, AppContext } from './components/AppContext';
 import { type ItemInCart } from './pages/ItemPage';
 import GuestCheckoutPage from './pages/GuestCheckoutPage';
@@ -30,6 +30,7 @@ export default function App() {
   const [category, setCategory] = useState<string>('');
   const [searchKeyWords, setSearchKeyWords] = useState('Books');
   const [showGuestCheckOut, setShowGuestCheckOut] = useState(false);
+  const [card, setCard] = useState('');
 
   const [orderSummary, setOrderSummary] = useState<OrderSummary>({
     totalItems: 0,
@@ -49,6 +50,7 @@ export default function App() {
     handleSignOut,
     user,
     token,
+    card,
   };
 
   const tokenKey = 'swift-ship';
@@ -133,7 +135,10 @@ export default function App() {
               />
             }
           />
-          <Route path="checkout" element={<Checkout />} />
+          <Route
+            path="login-payment"
+            element={<LoginUserPaymentPage setCard={setCard} />}
+          />
           <Route
             path="shipping"
             element={<ShippingPage setOrderID={setOrderID} />}

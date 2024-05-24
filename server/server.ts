@@ -475,6 +475,40 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
   }
 });
 
+app.post('/api/login-user-checkout/order', async (req, res, next) => {
+  try {
+    const { orderSummary, card, user } = req.body;
+    const timeStamp = Date.now();
+    const randomNumbers = Math.floor(Math.random() * 1000000);
+    const orderNumber = `${timeStamp}${randomNumbers}`;
+
+    // if (!card || !orderSummary ||!user) {
+    //   throw new Error('All fields are required.');
+    // }
+
+    const sql = `
+      insert into "orders" ("orderNumber","userID","cardNumber","totalAmount")
+      values($1,$2,$3,$4)
+      RETURNING *
+    `;
+
+    const params = [orderNumber, user.userID, card, orderSummary.totalAmount];
+
+    // const params = [12, 100, 123456, 112.12];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log(
+      'error occur in the /api/login-user-checkout/payment route',
+      err
+    );
+  }
+});
+
 app.delete('/api/guest-checkout/:orderID', async (req, res, next) => {
   try {
     const orderID = Number(req.params.orderID);
