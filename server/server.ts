@@ -162,6 +162,59 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
   }
 });
 
+app.get('/api/login-user-checkout/info', async (req, res, next) => {
+  try {
+    const userID = Number(req.query.userID);
+    console.log(req.query);
+
+    const sql = `
+      select *
+      from "users"
+      where "userID" = $1
+    `;
+
+    const param = [userID];
+    const result = await db.query(sql, param);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the orderID`);
+    }
+
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log('cannot retrieved shipping info');
+  }
+});
+
+app.get('/api/login-user-order/info', async (req, res, next) => {
+  try {
+    const userID = Number(req.query.userID);
+    console.log(req.query);
+
+    const sql = `
+      select *
+      from "users"
+      join "orders" using ("userID")
+      where "userID" = $1
+    `;
+
+    const param = [userID];
+    const result = await db.query(sql, param);
+
+    if (!result.rows[0]) {
+      throw new ClientError(404, `cannot find product with the orderID`);
+    }
+
+    console.log(result.rows[0]);
+
+    res.json(result.rows[0]);
+  } catch (e) {
+    console.log('cannot retrieved shipping info');
+  }
+});
+
 app.get('/api/products', async (req, res, next) => {
   try {
     const sql = `
@@ -446,6 +499,40 @@ app.put('/api/guest-checkout/order', async (req, res, next) => {
     res.status(201).json(response);
   } catch (err) {
     console.log('error occur in the /api/guest-checkout/payment route', err);
+  }
+});
+
+app.post('/api/login-user-checkout/order', async (req, res, next) => {
+  try {
+    const { orderSummary, card, user } = req.body;
+    const timeStamp = Date.now();
+    const randomNumbers = Math.floor(Math.random() * 1000000);
+    const orderNumber = `${timeStamp}${randomNumbers}`;
+
+    // if (!card || !orderSummary ||!user) {
+    //   throw new Error('All fields are required.');
+    // }
+
+    const sql = `
+      insert into "orders" ("orderNumber","userID","cardNumber","totalAmount")
+      values($1,$2,$3,$4)
+      RETURNING *
+    `;
+
+    const params = [orderNumber, user.userID, card, orderSummary.totalAmount];
+
+    // const params = [12, 100, 123456, 112.12];
+
+    console.log(params);
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    console.log(response);
+    res.status(201).json(response);
+  } catch (err) {
+    console.log(
+      'error occur in the /api/login-user-checkout/payment route',
+      err
+    );
   }
 });
 

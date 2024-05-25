@@ -1,47 +1,67 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../components/AppContext';
-import { getShippingInformation } from '../data';
+import { getShippingInformation, getUserOrderInfo } from '../data';
 
 type OrderDetails = {
   orderNumber: number;
   totalAmount: number;
-  guestAddress: string;
-  guestCity: string;
-  guestState: string;
-  guestZipCode: number;
-  guestEmail: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: number;
+  email: string;
 };
 
 export default function OrderConfirmationContent() {
-  const { orderID, orderSummary } = useContext(AppContext);
+  const { orderID, orderSummary, user } = useContext(AppContext);
   const [orderDetails, setOrderDetails] = useState<OrderDetails>({
     orderNumber: 0,
     totalAmount: 0,
-    guestAddress: '',
-    guestCity: '',
-    guestState: '',
-    guestZipCode: 0,
-    guestEmail: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: 0,
+    email: '',
   });
 
   useEffect(() => {
     async function getInfo() {
       const existing = await getShippingInformation(orderID);
-      setOrderDetails(existing);
+      const {
+        orderNumber,
+        totalAmount,
+        guestAddress,
+        guestCity,
+        guestState,
+        guestZipCode,
+        guestEmail,
+      } = existing;
+      setOrderDetails({
+        orderNumber: orderNumber,
+        totalAmount: totalAmount,
+        address: guestAddress,
+        city: guestCity,
+        state: guestState,
+        zipCode: guestZipCode,
+        email: guestEmail,
+      });
     }
 
-    getInfo();
+    async function getLoginUserInfo() {
+      const loginUser = await getUserOrderInfo(user.userID);
+      console.log('loginUserInfo', loginUser);
+      setOrderDetails(loginUser);
+    }
+
+    if (!user) {
+      getInfo();
+    } else {
+      getLoginUserInfo();
+    }
   }, []);
 
-  const {
-    orderNumber,
-    totalAmount,
-    guestAddress,
-    guestCity,
-    guestState,
-    guestZipCode,
-    guestEmail,
-  } = orderDetails;
+  const { orderNumber, totalAmount, address, city, state, zipCode, email } =
+    orderDetails;
 
   return (
     <div className="max-w-5xl m-5">
@@ -51,13 +71,15 @@ export default function OrderConfirmationContent() {
         </div>
         <div className="m-3">
           <p className="text-sm">
-            An email confirmation has been sent to {guestEmail}.
+            An email confirmation has been sent to {email}.
           </p>
         </div>
         <div className=" text-sm flex justify-center">
           <div className="border border-current text-left flex-2 px-5">
             <p className="pt-3">Order number: {orderNumber}</p>
-            <p className="pt-2">Order total: ${totalAmount}</p>
+            <p className="pt-2">
+              Order total: ${Number(totalAmount).toFixed(2)}
+            </p>
             <p className="pt-2">
               Deliver by: {orderSummary.earlyDeliveryDate} -{' '}
               {orderSummary.lateDeliveryDate}
@@ -65,9 +87,9 @@ export default function OrderConfirmationContent() {
             <div className="flex pt-2 mb-3">
               <span className="inline m-0">Delivery Address: </span>
               <div className="inline-block ml-1">
-                {guestAddress},
+                {address},
                 <span className="m-0">
-                  {guestCity}, {guestState} {guestZipCode}
+                  {city}, {state} {zipCode}
                 </span>
               </div>
             </div>

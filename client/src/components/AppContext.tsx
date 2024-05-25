@@ -16,6 +16,7 @@ type AppContextValues = {
   orderSummary: OrderSummary;
   orderID: number;
   user: any;
+  card: any;
   handleSignIn: (auth) => void;
   handleSignOut: () => void;
 };
@@ -33,6 +34,7 @@ export const AppContext = createContext<AppContextValues>({
   },
   orderID: 0,
   user: '',
+  card: '',
   handleSignIn: () => undefined,
   handleSignOut: () => undefined,
 });
