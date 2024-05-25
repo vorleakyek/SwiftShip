@@ -118,6 +118,22 @@ export async function getUserInfo(userID: number) {
   return userInfo;
 }
 
+export async function getUserOrderInfo(userID: number) {
+  const req = {
+    method: 'GET',
+    headers: {
+      'content-Type': 'application/json',
+    },
+  };
+  const res = await fetch(`/api/login-user-order/info?userID=${userID}`, req);
+  if (!res.ok) {
+    alert('error');
+    throw new Error(`fetch Error ${res.status}`);
+  }
+  const userInfo = await res.json();
+  return userInfo;
+}
+
 export async function getShippingInformation(orderID: number) {
   const req = {
     method: 'GET',

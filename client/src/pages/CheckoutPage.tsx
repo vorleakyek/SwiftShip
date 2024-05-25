@@ -99,7 +99,7 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
         console.log('update req', req);
         const res = await fetch('api/guest-checkout/order', req);
         if (!res.ok) {
-          alert('error');
+          console.error('error');
           throw new Error(`fetch Error ${res.status}`);
         }
         const paymentInfo = await res.json();
@@ -114,14 +114,13 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
         console.log('update req', req);
         const res = await fetch('api/login-user-checkout/order', req);
         if (!res.ok) {
-          alert('error');
           throw new Error(`fetch Error ${res.status}`);
         }
         const paymentInfo = await res.json();
         console.log('shipping info', paymentInfo);
       }
     } catch (err) {
-      alert(`Error registering user: ${err}`);
+      console.error(`Error registering user: ${err}`);
     }
 
     navigate('/order-confirmation');
@@ -144,7 +143,7 @@ export default function CheckoutPage({ setItemsInCart, setOrderSummary }) {
         throw new Error(`fetch Error ${res.status}`);
       }
     } catch (err) {
-      alert(`Error registering user: ${err}`);
+      console.error(`Error registering user: ${err}`);
     }
     navigate('/');
   }

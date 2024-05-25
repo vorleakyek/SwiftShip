@@ -40,7 +40,7 @@ CREATE TABLE "categories" (
 
 CREATE TABLE "orders" (
   "orderNumber" varchar(50) PRIMARY KEY,
-  "userID" varchar(20),
+  "userID" int,
   "cardNumber" varchar(25),
   "totalAmount" DECIMAL(10, 5),
   "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL

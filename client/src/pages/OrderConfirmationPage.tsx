@@ -13,10 +13,10 @@ export default function OrderConfirmationPage({
     setItemsInCart([]);
     setOrderSummary({
       totalItems: 0,
-      price: 0,
-      tax: 0,
+      price: '',
+      tax: '',
       shippingCost: 0,
-      totalAmount: 0,
+      totalAmount: '',
       earlyDeliveryDate: '',
       lateDeliveryDate: '',
     });
