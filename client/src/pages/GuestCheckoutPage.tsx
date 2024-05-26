@@ -80,62 +80,64 @@ export default function GuestCheckoutPage({
         </>
       )}
 
-      <div className="my-5">
-        <form onSubmit={handleSubmit}>
-          <div className="relative">
-            <label
-              htmlFor="email"
-              className="absolute top-0 left-0 -mt-4 ml-2 bg-white px-1">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="border border-slate-500 py-1 w-full bg-white px-2"
-              required
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mt-5 relative">
-            <label htmlFor="password" className="hidden">
-              Password
-            </label>
-            <input
-              type={isHidden ? 'password' : 'text'}
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="border border-slate-500 px-2 py-1 w-full"
-              required
-            />
-            <div className="absolute top-1 right-0 mr-2 text-sm">
-              <span
-                onClick={() => {
-                  setIsHidden(!isHidden);
-                }}>
-                {isHidden ? (
-                  <FiEyeOff className="text-lg" />
-                ) : (
-                  <FiEye className="text-lg" />
-                )}
-              </span>
+      <div className="my-5 flex justify-center">
+        <div className="basis-full sm:basis-1/2">
+          <form onSubmit={handleSubmit}>
+            <div className="relative">
+              <label
+                htmlFor="email"
+                className="absolute top-0 left-0 -mt-4 ml-2 bg-white px-1">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="border border-slate-500 py-1 w-full bg-white px-2"
+                required
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
-          </div>
+            <div className="mt-5 relative">
+              <label htmlFor="password" className="hidden">
+                Password
+              </label>
+              <input
+                type={isHidden ? 'password' : 'text'}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                className="border border-slate-500 px-2 py-1 w-full"
+                required
+              />
+              <div className="absolute top-1 right-0 mr-2 text-sm">
+                <span
+                  onClick={() => {
+                    setIsHidden(!isHidden);
+                  }}>
+                  {isHidden ? (
+                    <FiEyeOff className="text-lg" />
+                  ) : (
+                    <FiEye className="text-lg" />
+                  )}
+                </span>
+              </div>
+            </div>
 
-          <div className="text-right pt-2">
-            <Link className="text-sky-800 font-semibold" to={'/sign-up'}>
-              Create Account
-            </Link>
-          </div>
+            <div className="text-right pt-2">
+              <Link className="text-sky-800 font-semibold" to={'/sign-up'}>
+                Create Account
+              </Link>
+            </div>
 
-          <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
-            Sign In
-          </button>
-        </form>
+            <button className="bg-amber-400 rounded-3xl px-5 py-1 my-3">
+              Sign In
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
