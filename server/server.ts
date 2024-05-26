@@ -194,10 +194,16 @@ app.get('/api/login-user-order/info', async (req, res, next) => {
     console.log(req.query);
 
     const sql = `
-      select *
-      from "users"
-      join "orders" using ("userID")
-      where "userID" = $1
+      SELECT *
+      FROM "users"
+      JOIN "orders"
+      ON "users"."userID" = "orders"."userID"
+      AND "orders"."createdAt" = (
+        SELECT MAX("createdAt")
+        FROM "orders"
+        WHERE "userID" = $1
+      )
+      WHERE "users"."userID" = $1
     `;
 
     const param = [userID];
