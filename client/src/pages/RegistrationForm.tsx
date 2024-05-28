@@ -2,12 +2,6 @@ import { type FormEvent, ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { states } from '../data';
 
-// import '../layout.css';
-// import '../styles.css';
-
-/**
- * Form that registers a user.
- */
 export function RegistrationForm() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -74,8 +68,6 @@ export function RegistrationForm() {
           throw new Error(`fetch Error ${res.status}`);
         }
         const shippingInfo = await res.json();
-        // setOrderID(shippingInfo.orderID);
-
         shippingInfo && navigate('/guest-checkout');
       } catch (err) {
         alert(`Error registering user: ${err}`);
@@ -86,7 +78,6 @@ export function RegistrationForm() {
   return (
     <div className="max-w-5xl text-left mt-2">
       <h1 className="font-semibold my-3 text-lg">Registration</h1>
-
       <div className="flex ml-7">
         <div>
           <form onSubmit={handleSubmit}>

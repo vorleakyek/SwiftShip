@@ -39,7 +39,6 @@ export default function PaymentPage() {
   } = billingInfo;
 
   const [isError, setIsError] = useState(false);
-  // const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function getInfo() {
