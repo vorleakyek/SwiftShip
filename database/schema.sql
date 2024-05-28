@@ -61,3 +61,11 @@ CREATE TABLE "guestOrders" (
   "orderNumber" VARCHAR(50),
   "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
 );
+
+CREATE TABLE "customerServiceMessages" (
+  "messageNumber" serial PRIMARY KEY,
+  "userID" int,
+  "isMember" boolean,
+  "message" VARCHAR(10000),
+  "createdAt" timestamp(6) with time zone DEFAULT now() NOT NULL
+)

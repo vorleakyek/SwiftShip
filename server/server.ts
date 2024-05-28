@@ -515,9 +515,9 @@ app.post('/api/login-user-checkout/order', async (req, res, next) => {
     const randomNumbers = Math.floor(Math.random() * 1000000);
     const orderNumber = `${timeStamp}${randomNumbers}`;
 
-    // if (!card || !orderSummary ||!user) {
-    //   throw new Error('All fields are required.');
-    // }
+    if (!card || !orderSummary || !user) {
+      throw new Error('All fields are required.');
+    }
 
     const sql = `
       insert into "orders" ("orderNumber","userID","cardNumber","totalAmount")
@@ -526,19 +526,36 @@ app.post('/api/login-user-checkout/order', async (req, res, next) => {
     `;
 
     const params = [orderNumber, user.userID, card, orderSummary.totalAmount];
-
-    // const params = [12, 100, 123456, 112.12];
-
-    console.log(params);
     const result = await db.query(sql, params);
     const response = result.rows[0];
-    console.log(response);
     res.status(201).json(response);
   } catch (err) {
-    console.log(
-      'error occur in the /api/login-user-checkout/payment route',
-      err
-    );
+    next(err);
+  }
+});
+
+app.post('/api/customer-service', async (req, res, next) => {
+  try {
+    const { user, message } = req.body;
+    const isMember = !!user;
+
+    if (!message) {
+      throw new Error('Missing required info');
+    }
+
+    const sql = `
+      insert into "customerServiceMessages" ("message", "userID", "isMember")
+      values ($1, $2, $3)
+      Returning *
+    `;
+
+    const userID = user ? user.userID : null;
+    const params = [message, userID, isMember];
+    const result = await db.query(sql, params);
+    const response = result.rows[0];
+    res.status(201).json(response);
+  } catch (err) {
+    next(err);
   }
 });
 
