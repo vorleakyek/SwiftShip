@@ -1,10 +1,15 @@
 import { createChatBotMessage } from 'react-chatbot-kit';
 import DogPicture from './DogPicture';
 
-const botName = 'Bot';
-
 const config = {
-  initialMessages: [createChatBotMessage(`Hi! I'm ${botName}!`)],
+  initialMessages: [
+    createChatBotMessage(`Type one of the following words:
+  "hi",
+  "hello",
+  "hey",
+  "dog", or
+  "bye".`),
+  ],
   widgets: [
     {
       widgetName: 'dogPicture',
