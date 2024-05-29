@@ -16,7 +16,7 @@ I want to build an e-commerce website to enhance and maintain my development ski
 - Express
 - PostgreSQL
 - React-chatbot-kit
-- Figma (for a wire frame) 
+- Figma (for a wireframe) 
 
 
 ## Live Demo
@@ -34,12 +34,20 @@ I want to build an e-commerce website to enhance and maintain my development ski
 - Users can send messages to customer service.
 
 ## Preview
-
-
+SwiftShip (Homepage) <br>
+<img src="client/src/assets/SwiftShip%20(part%201).gif" alt="SwiftShip (Homepage)" width="650" height="auto"> <br><br>
+SwiftShip (Chatbot + Adding items to the cart) <br>
+<img src="client/src/assets/SwiftShip%20(part%202).gif" alt="SwiftShip (Homepage)" width="650" height="auto"> <br><br>
+SwiftShip (Guest checkout) <br>
+<img src="client/src/assets/SwiftShip%20guest%20checkout.gif" alt="SwiftShip (Homepage)" width="650" height="auto"> <br><br>
+SwiftShip (Login checkout) <br>
+<img src="client/src/assets/SwiftShip%20login%20checkout%20.gif" alt="SwiftShip (Homepage)" width="650" height="auto"> <br>
 
 ## Development
 
-- Working on deployment to AWS 
+- Working on deployment to AWS
+- Update the search functionality
+- Refactoring the code and update any logic issue
 
 ### System Requirements
 
