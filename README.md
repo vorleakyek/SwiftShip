@@ -1,4 +1,80 @@
-# full-stack-project
+# match-master
 
-A full stack TypeScript solo project.
+A full-stack e-commerce web application for online shopping.
 
+## why I Built This
+
+I want to build an e-commerce website to enhance and maintain my development skills in both frontend and backend development.
+
+## Technologies Used
+
+- React
+- CSS3
+- Tailwind CSS 
+- TypeScript
+- Node.js
+- Express
+- PostgreSQL
+- React-chatbot-kit
+- Figma (for a wire frame) 
+
+
+## Live Demo
+
+
+
+## Features
+
+- Users can sign up, log in, or shop online as guests.
+- Users can chat with a chatbot.
+- Users can add items with a specific quantity to their cart.
+- Users can view the items in their cart, update the item quantity, or delete items.
+- Users can check out as guests or as logged-in users.
+- Users can search for specific items or categories.
+- Users can send messages to customer service.
+
+## Preview
+
+
+
+## Development
+
+- Working on deployment to AWS 
+
+### System Requirements
+
+- Node.js 18 or higher
+- NPM 8 or higher
+- PostgreSQL
+
+### Getting Started
+
+1. Clone the repository
+
+   ```shell
+   git clone https://github.com/vorleakyek/SwiftShip.git
+   ```
+
+2. Install all dependencies with NPM
+
+   ```shell
+   npm install
+   ```
+
+3. Start PostgreSQL
+
+   ```shell
+   sudo service postgresql start
+   ```
+
+4. Start all the development servers with the `"dev"` script:
+
+   ```shell
+   npm run dev
+   ```
+
+5. Run this command to view the data on the database
+
+   ```shell
+   pgweb --db matchMaster
+   ```
