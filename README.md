@@ -84,5 +84,5 @@ SwiftShip (Login checkout) <br>
 5. Run this command to view the data on the database
 
    ```shell
-   pgweb --db matchMaster
+   pgweb --db swift-ship
    ```
