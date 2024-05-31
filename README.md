@@ -21,7 +21,7 @@ I want to build an e-commerce website to enhance and maintain my development ski
 
 ## Live Demo
 
-
+http://ec2-18-144-84-0.us-west-1.compute.amazonaws.com/ 
 
 ## Features
 
@@ -45,7 +45,6 @@ SwiftShip (Login checkout) <br>
 
 ## Development
 
-- Working on deployment to AWS
 - Update the search functionality
 - Refactoring the code and update any logic issue
 
