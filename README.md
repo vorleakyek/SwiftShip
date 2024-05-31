@@ -1,6 +1,7 @@
-# match-master
+# SwiftShip 
 
-A full-stack e-commerce web application for online shopping.
+A full-stack e-commerce web application for online shopping. 
+Note: refer to https://github.com/vorleakyek/SwiftShipApp for an updated version. 
 
 ## why I Built This
 
