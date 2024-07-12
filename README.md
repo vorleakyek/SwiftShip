@@ -3,7 +3,7 @@
 A full-stack e-commerce web application for online shopping. 
 Note: refer to https://github.com/vorleakyek/SwiftShipApp for an updated version. 
 
-## why I Built This
+## why I Built This?
 
 I want to build an e-commerce website to enhance and maintain my development skills in both frontend and backend development.
 
@@ -22,7 +22,7 @@ I want to build an e-commerce website to enhance and maintain my development ski
 
 ## Live Demo
 
-http://ec2-18-144-84-0.us-west-1.compute.amazonaws.com/ 
+http://ec2-54-177-188-240.us-west-1.compute.amazonaws.com/
 
 ## Features
 
