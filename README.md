@@ -22,7 +22,7 @@ I want to build an e-commerce website to enhance and maintain my development ski
 
 ## Live Demo
 
-http://ec2-54-177-188-240.us-west-1.compute.amazonaws.com/
+http://ec2-52-52-230-48.us-west-1.compute.amazonaws.com/
 
 ## Features
 
